@@ -1,0 +1,12 @@
+{% extends "index.html" %}
+
+{% block title %}{{ super() }} - {{ page.title }}{% endblock title %}
+{% block h1 %}{{ super() }} - {{ page.title }}{% endblock title %}
+
+{% block content %}
+{{ page.content | safe }}
+
+<hr>
+
+<a href="{{ get_url(path="@/_index.md") | safe }}">Back</a>
+{% endblock content %}

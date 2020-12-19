@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <title>{% block title %}{{ config.title }}{% endblock title %}</title>
+</head>
+<body>
+
+<h1>{% block h1 %}{{ config.title }}{% endblock h1 %}</h1>
+
+{% block content %}
+{{ section.content | safe }}
+
+{% set section = get_section(path="_index.md") %}
+<ul>
+{% for page in section.pages %}
+  <li><a href="{{ page.permalink | safe }}">{{ page.title }}</a></li>
+{% endfor %}
+</ul>
+{% endblock %}
+
+</body>
+</html>
