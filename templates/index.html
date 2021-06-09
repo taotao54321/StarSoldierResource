@@ -1,23 +1,31 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-  <meta charset="utf-8">
-  <title>{% block title %}{{ config.title }}{% endblock title %}</title>
-</head>
-<body>
+{% extends "base.html" %}
 
-<h1>{% block h1 %}{{ config.title }}{% endblock h1 %}</h1>
+{% block title %}{{ config.title }}{% endblock %}
 
 {% block content %}
+{%
+set PAGE_NAMES = [
+    "cell-table",
+    "meta-sprite-table",
+    "ground-01-04",
+    "ground-05-08",
+    "ground-09-12",
+    "ground-13-16",
+]
+%}
+
+<header>{{ config.title }}</header>
+
 {{ section.content | safe }}
 
-{% set section = get_section(path="_index.md") %}
 <ul>
-{% for page in section.pages %}
+{% for name in PAGE_NAMES %}
+{% set page = get_page(path=name~"/index.md") %}
   <li><a href="{{ page.permalink | safe }}">{{ page.title }}</a></li>
 {% endfor %}
 </ul>
-{% endblock %}
 
-</body>
-</html>
+<p>マップは1周目のみ掲載した。2周目(グラフィックが違うだけ)も含めたマップは<a href="https://vgmaps.com/Atlas/NES/#StarSoldier">VGMaps</a>にある。</p>
+
+<p>本ドキュメントは<a href="https://github.com/taotao54321/StarSoldierResource">gitリポジトリ</a>で管理されている。誤りの指摘などは Issue へどうぞ。</p>
+{% endblock %}

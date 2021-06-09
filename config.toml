@@ -1,2 +1,7 @@
 base_url = "https://taotao54321.github.io/StarSoldierResource/"
-title = "スターソルジャー (FC) 資料"
+title = "スターソルジャー (FC) 解析資料"
+
+[markdown]
+highlight_code = true
+
+[extra]
