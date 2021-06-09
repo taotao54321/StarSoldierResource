@@ -49,28 +49,28 @@ date = 2021-06-10
 
 仮想マシンは以下の命令を持つ:
 
-| オペコード            | ニーモニック         | 機能                                  |
-| --                    | --                   | --                                    |
-| `0x00..=0x3F`         | `move`               | 敵を指定方向へ移動                    |
-| `0x40`                | `jump`               | ジャンプ                              |
-| `0x41..=0x4F`         | `set_sleep_timer`    | `sleep_timer` を設定                  |
-| `0x50`, `0x52..=0x5F` | `loop_begin`         | 指定回数のループを開始                |
-| `0x51`                | `loop_end`           | ループ末尾                            |
-| `0x60..=0x6F`         | `shoot_direction`    | 方向指定弾を撃つ (未使用)             |
-| `0x70..=0x7F`         | `set_sprite`         | 敵メタスプライトIDを設定              |
-| `0x80..=0x8F`         | `set_homing_timer`   | `homing_timer` を設定                 |
-| `0x90..=0x93`         | `set_inversion`      | `inv_x`, `inv_y` を設定               |
-| `0xA0`                | `set_position`       | 敵座標を設定                          |
-| `0xA1`                | `set_jump_on_damage` | `jump_on_damage` を設定               |
-| `0xA2`                | `increment_sprite`   | 敵メタスプライトIDをインクリメント    |
-| `0xA3`                | `decrement_sprite`   | 敵メタスプライトIDをデクリメント      |
-| `0xA4`                | `set_part`           | 敵パーツ番号を設定                    |
-| `0xA5`                | `randomize_x`        | 敵座標x をランダムに変更              |
-| `0xA6`                | `randomize_y`        | 敵座標y をランダムに変更              |
-| `0xB0`                | `bcc_x`              | `(敵座標x) <  (自機座標x)` ならば分岐 |
-| `0xB1`                | `bcs_x`              | `(敵座標x) >= (自機座標x)` ならば分岐 |
-| `0xB2`                | `bcc_y`              | `(敵座標y) <  (自機座標y)` ならば分岐 |
-| `0xB3`                | `bcs_y`              | `(敵座標y) >= (自機座標y)` ならば分岐 |
-| `0xC0..=0xCF`         | `shoot_aim`          | 自機狙い弾を撃つ                      |
-| `0xF0`                | `restore_music`      | BGM をデフォルトに戻す                |
-| `0xF1..=0xFF`         | `play_sound`         | 指定したサウンドを鳴らす              |
+| オペコード            | ニーモニック         | 機能                                  | 実行の中断 |
+| --                    | --                   | --                                    | --         |
+| `0x00..=0x3F`         | `move`               | 敵を指定方向へ移動                    | Yes        |
+| `0x40`                | `jump`               | ジャンプ                              | No         |
+| `0x41..=0x4F`         | `set_sleep_timer`    | `sleep_timer` を設定                  | Yes        |
+| `0x50`, `0x52..=0x5F` | `loop_begin`         | 指定回数のループを開始                | No         |
+| `0x51`                | `loop_end`           | ループ末尾                            | No         |
+| `0x60..=0x6F`         | `shoot_direction`    | 方向指定弾を撃つ (未使用)             | No         |
+| `0x70..=0x7F`         | `set_sprite`         | 敵メタスプライトIDを設定              | No         |
+| `0x80..=0x8F`         | `set_homing_timer`   | `homing_timer` を設定                 | No         |
+| `0x90..=0x93`         | `set_inversion`      | `inv_x`, `inv_y` を設定               | No         |
+| `0xA0`                | `set_position`       | 敵座標を設定                          | No         |
+| `0xA1`                | `set_jump_on_damage` | `jump_on_damage` を設定               | Yes        |
+| `0xA2`                | `increment_sprite`   | 敵メタスプライトIDをインクリメント    | No         |
+| `0xA3`                | `decrement_sprite`   | 敵メタスプライトIDをデクリメント      | No         |
+| `0xA4`                | `set_part`           | 敵パーツ番号を設定                    | No         |
+| `0xA5`                | `randomize_x`        | 敵座標x をランダムに変更              | No         |
+| `0xA6`                | `randomize_y`        | 敵座標y をランダムに変更              | No         |
+| `0xB0`                | `bcc_x`              | `(敵座標x) <  (自機座標x)` ならば分岐 | No         |
+| `0xB1`                | `bcs_x`              | `(敵座標x) >= (自機座標x)` ならば分岐 | No         |
+| `0xB2`                | `bcc_y`              | `(敵座標y) <  (自機座標y)` ならば分岐 | No         |
+| `0xB3`                | `bcs_y`              | `(敵座標y) >= (自機座標y)` ならば分岐 | No         |
+| `0xC0..=0xCF`         | `shoot_aim`          | 自機狙い弾を撃つ                      | No         |
+| `0xF0`                | `restore_music`      | BGM をデフォルトに戻す                | No         |
+| `0xF1..=0xFF`         | `play_sound`         | 指定したサウンドを鳴らす              | No         |
