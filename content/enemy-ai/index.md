@@ -96,7 +96,7 @@ updated = 2021-06-12
 
 実行を継続する。
 
-#### `0x41...=0x4F` (`set_sleep_timer`) {#op-set-sleep-timer}
+#### `0x41..=0x4F` (`set_sleep_timer`) {#op-set-sleep-timer}
 
 1Byte 命令。
 
