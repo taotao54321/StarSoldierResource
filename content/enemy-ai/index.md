@@ -74,7 +74,7 @@ updated = 2021-06-12
 | `0xB3`                | [`bcs_y`](#op-branch)                          | `(敵座標y) >= (自機座標y)` ならば分岐 | No         |
 | `0xC0..=0xCF`         | [`shoot_aim`](#op-shoot-aim)                   | 自機狙い弾を撃つ                      | No         |
 | `0xF0`                | [`restore_music`](#op-restore-music)           | BGMをデフォルトに戻す                 | No         |
-| `0xF1..=0xFF`         | [`play_sound`](#op-play-sound)                 | 指定したサウンドを鳴らす              | No         |
+| `0xF1..=0xFF`         | [`play_sound`](#op-play-sound)                 | 指定した効果音を鳴らす                | No         |
 
 #### `0x00..=0x3F` (`move`) {#op-move}
 
@@ -241,6 +241,6 @@ BGMをデフォルトに戻す。ラザロのBGMを元に戻すのに使われ�
 
 1Byte 命令。
 
-オペコード下位4bitのサウンドを鳴らす。
+オペコード下位4bitの効果音を鳴らす。
 
 実行を継続する。
