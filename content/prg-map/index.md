@@ -204,11 +204,22 @@ updated = 2021-06-15
 |`$`|||
 |`$BAF8`|code|バンク切り替え動作テストルーチン (CHR #0, #1 内の magic 文字列を比較し、一致しないことを確認)|
 |`$BB29`|code|指定した CHR バンクからの magic 文字列読み取りを開始(空読みまで行う)|
-|`$`|||
-|`$`|||
-|`$`|||
-|`$`|||
-|`$`|||
+|`$BB3E`|data|地形の[特殊セルデータ](@/ground-format/index.md#special-cell) 1面|
+|`$BB43`|data|地形の[特殊セルデータ](@/ground-format/index.md#special-cell) 2面|
+|`$BB48`|data|地形の[特殊セルデータ](@/ground-format/index.md#special-cell) 3面|
+|`$BB4F`|data|地形の[特殊セルデータ](@/ground-format/index.md#special-cell) 4面|
+|`$BB56`|data|地形の[特殊セルデータ](@/ground-format/index.md#special-cell) 5面|
+|`$BB5B`|data|地形の[特殊セルデータ](@/ground-format/index.md#special-cell) 6面|
+|`$BB5E`|data|地形の[特殊セルデータ](@/ground-format/index.md#special-cell) 7面|
+|`$BB63`|data|地形の[特殊セルデータ](@/ground-format/index.md#special-cell) 8面|
+|`$BB68`|data|地形の[特殊セルデータ](@/ground-format/index.md#special-cell) 9面|
+|`$BB6D`|data|地形の[特殊セルデータ](@/ground-format/index.md#special-cell) 10面|
+|`$BB72`|data|地形の[特殊セルデータ](@/ground-format/index.md#special-cell) 11面|
+|`$BB77`|data|地形の[特殊セルデータ](@/ground-format/index.md#special-cell) 12面|
+|`$BB7A`|data|地形の[特殊セルデータ](@/ground-format/index.md#special-cell) 13面|
+|`$BB7F`|data|地形の[特殊セルデータ](@/ground-format/index.md#special-cell) 14面|
+|`$BB84`|data|地形の[特殊セルデータ](@/ground-format/index.md#special-cell) 15面|
+|`$BB87`|data|地形の[特殊セルデータ](@/ground-format/index.md#special-cell) 16面|
 |`$BB8C`|data|BGM 各音階(矩形波 C2 から B2 まで)に対応する周波数タイマー値|
 |`$BBA6`|data|BGM 各BGMに対応する[トラックデータ](@/music/index.md#track-data))(矩形波1, 矩形波2, 三角波)へのポインタ|
 |`$BBE2`|data|BGM [トラックデータ](@/music/index.md#track-data) タイトル画面 矩形波1|
