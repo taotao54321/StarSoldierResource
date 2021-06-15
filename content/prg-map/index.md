@@ -1,7 +1,7 @@
 +++
 title = "PRG-ROM マップ"
 date = 2021-06-13
-updated = 2021-06-14
+updated = 2021-06-15
 +++
 
 ## 概要
@@ -27,7 +27,7 @@ updated = 2021-06-14
 |`$83B0`|code|エンディングシーン|
 |`$83F3`|code|スターブレイン逃走ルーチン|
 |`$8482`|code|ゲームオーバーシーン|
-|`$84CD`|code|現在の面の地形関連データをロードするルーチン|
+|`$84CD`|code|現在の面の地形関連ポインタおよび地形設定をロードするルーチン|
 |`$8506`|code|地形全体を空白セルで埋め、地形処理を無効化するルーチン|
 |`$8512`|code|地形全体を空白セルで埋めるルーチン|
 |`$8525`|code||
@@ -107,6 +107,55 @@ updated = 2021-06-14
 |`$`|||
 |`$`|||
 |`$`|||
+|`$A75C`|code|現在の地形の先頭行をロードするルーチン (NMI から 16F に1回呼ばれる)|
+|`$A78D`|code|進行度管理および面の地形の前半/後半切り替えルーチン (NMI から 16F に1回呼ばれる)|
+|`$A7E6`|code|現在の面の地形の後半のデータをロードするルーチン|
+|`$A7F2`|code|現在の面の地形の前半のデータをロードするルーチン|
+|`$A7FC`|code|現在の[地形設定](@/ground-format/index.md#setting)を適用するルーチン|
+|`$A83C`|code|PPU へパレットを非同期に転送するルーチン|
+|`$A86A`|code|地形の[特殊セル](@/ground-format/index.md#special-cell)をロードするルーチン (NMI から 16F に1回呼ばれる)|
+|`$A897`|code|地形の[圧縮データ](@/ground-format/index.md#compression)を展開し、現在の地形の先頭行を更新するルーチン|
+|`$A93F`|code|スコア表示スプライト書き込みルーチン|
+|`$A98A`|code|自機スプライト書き込みルーチン|
+|`$AA26`|code|バリアスプライト書き込みルーチン|
+|`$AA3A`|data|バリア位置テーブル (自機に対する相対座標 (dx,dy))|
+|`$AA4A`|code|メタスプライト書き込みルーチン|
+|`$AAB6`|code|単一スプライト書き込みルーチン|
+|`$AAC8`|code|星スプライト書き込みルーチン|
+|`$AB1C`|code|星を動かすルーチン|
+|`$AB57`|code|面/残機表示スプライト書き込みルーチン|
+|`$ABA3`|code|自弾スプライト書き込みルーチン|
+|`$ABD9`|code|敵弾スプライト書き込みルーチン (最大4つまで同時表示)|
+|`$AC23`|code|オブジェクトスプライト書き込みルーチン|
+|`$AC65`|code|通知タイマーをデクリメントし、0 でなければ通知を表示するルーチン|
+|`$AC6A`|code|通知表示ルーチン|
+|`$AD5E`|data|ボーナス通知表示用データへのポインタテーブル|
+|`$AD6E`|data|ボーナス通知 "2000000" 表示用データ|
+|`$AD77`|data|ボーナス通知 "80000" 表示用データ|
+|`$AD7E`|data|ボーナス通知 "40000" 表示用データ|
+|`$AD85`|data|ボーナス通知 "10000" 表示用データ|
+|`$AD8C`|data|ボーナス通知 "4000" 表示用データ|
+|`$AD92`|data|ボーナス通知 "1000" 表示用データ|
+|`$AD98`|data|ボーナス通知 "500" 表示用データ|
+|`$AD9D`|data|通知表示用データへのポインタテーブル|
+|`$ADAF`|data|通知 "STAGE ?? START" 表示用データ|
+|`$ADC2`|data|通知 "PAUSE" 表示用データ|
+|`$ADCA`|data|通知 "GAME OVER" 表示用データ|
+|`$ADD8`|data|通知 "ATTACK STAR BRAIN" 表示用データ|
+|`$ADF0`|data|通知 "ATTACK BIG STAR BRAIN" 表示用データ|
+|`$AE0C`|data|通知 "BONUS ???????" 表示用データ|
+|`$AE17`|data|通知 "BRAIN ESCAPED" 表示用データ|
+|`$AE29`|data|通知 "WARP NEXT STAGE" 表示用データ|
+|`$AE3F`|data|通知 "COMPLETE WARP" 表示用データ|
+|`$AE51`|data||
+|`$AEA1`|code|次の VBLANK を待つルーチン|
+|`$AEAC`|code|全スプライトを非表示にするルーチン|
+|`$AEB7`|code|VRAM 全体をゼロクリアするルーチン|
+|`$`|||
+|`$`|||
+|`$`|||
+|`$`|||
+|`$`|||
 |`$B2D0`|code|タイトルシーン|
 |`$`|||
 |`$`|||
@@ -143,34 +192,43 @@ updated = 2021-06-14
 |`$`|||
 |`$`|||
 |`$BB8C`|data|BGM 各音階(矩形波 C2 から B2 まで)に対応する周波数タイマー値|
-|`$BBA6`|data|BGM 各BGMに対応するトラックデータ(矩形波1, 矩形波2, 三角波)へのポインタ|
-|`$BBE2`|data|BGM トラックデータ タイトル画面 矩形波1|
-|`$BC1B`|data|BGM トラックデータ タイトル画面 矩形波2|
-|`$BC45`|data|BGM トラックデータ タイトル画面 三角波|
-|`$BC61`|data|BGM トラックデータ ラザロ戦 矩形波1|
-|`$BC76`|data|BGM トラックデータ ラザロ戦 矩形波2/三角波|
-|`$BCAE`|data|BGM トラックデータ スターブレイン撃破 矩形波1|
-|`$BCDB`|data|BGM トラックデータ スターブレイン撃破 矩形波2|
-|`$BD0C`|data|BGM トラックデータ スターブレイン撃破 三角波|
-|`$BD31`|data|BGM トラックデータ ゲーム終了 矩形波1|
-|`$BD76`|data|BGM トラックデータ ゲーム終了 矩形波2|
-|`$BDAB`|data|BGM トラックデータ ゲーム終了 三角波|
-|`$BDD3`|data|BGM トラックデータ スターブレイン戦 矩形波1|
-|`$BE07`|data|BGM トラックデータ スターブレイン戦 矩形波2|
-|`$BE3B`|data|BGM トラックデータ スターブレイン戦 三角波|
-|`$BE79`|data|BGM トラックデータ 面イントロ (フルパワー未満) 矩形波1|
-|`$BE92`|data|BGM トラックデータ 面イントロ (フルパワー未満) 矩形波2|
-|`$BEC3`|data|BGM トラックデータ 面イントロ (フルパワー未満) 三角波|
-|`$BEF5`|data|BGM トラックデータ 無音 矩形波1/矩形波2/三角波|
-|`$BEF8`|data|BGM トラックデータ 面ループ (フルパワー未満) 矩形波1|
-|`$BFAB`|data|BGM トラックデータ 面ループ (フルパワー未満) 矩形波2|
-|`$C02D`|data|BGM トラックデータ 面ループ (フルパワー未満) 三角波|
-|`$C0EB`|data|BGM トラックデータ 面イントロ (フルパワー) 矩形波1|
-|`$C10A`|data|BGM トラックデータ 面イントロ (フルパワー) 矩形波2|
-|`$C128`|data|BGM トラックデータ 面イントロ (フルパワー) 三角波|
-|`$C141`|data|BGM トラックデータ 面ループ (フルパワー) 矩形波1|
-|`$C1FE`|data|BGM トラックデータ 面ループ (フルパワー) 矩形波2|
-|`$C2A0`|data|BGM トラックデータ 面ループ (フルパワー) 三角波|
+|`$BBA6`|data|BGM 各BGMに対応する[トラックデータ](@/music/index.md#track-data))(矩形波1, 矩形波2, 三角波)へのポインタ|
+|`$BBE2`|data|BGM [トラックデータ](@/music/index.md#track-data) タイトル画面 矩形波1|
+|`$BC1B`|data|BGM [トラックデータ](@/music/index.md#track-data) タイトル画面 矩形波2|
+|`$BC45`|data|BGM [トラックデータ](@/music/index.md#track-data) タイトル画面 三角波|
+|`$BC61`|data|BGM [トラックデータ](@/music/index.md#track-data) ラザロ戦 矩形波1|
+|`$BC76`|data|BGM [トラックデータ](@/music/index.md#track-data) ラザロ戦 矩形波2/三角波|
+|`$BCAE`|data|BGM [トラックデータ](@/music/index.md#track-data) スターブレイン撃破 矩形波1|
+|`$BCDB`|data|BGM [トラックデータ](@/music/index.md#track-data) スターブレイン撃破 矩形波2|
+|`$BD0C`|data|BGM [トラックデータ](@/music/index.md#track-data) スターブレイン撃破 三角波|
+|`$BD31`|data|BGM [トラックデータ](@/music/index.md#track-data) ゲーム終了 矩形波1|
+|`$BD76`|data|BGM [トラックデータ](@/music/index.md#track-data) ゲーム終了 矩形波2|
+|`$BDAB`|data|BGM [トラックデータ](@/music/index.md#track-data) ゲーム終了 三角波|
+|`$BDD3`|data|BGM [トラックデータ](@/music/index.md#track-data) スターブレイン戦 矩形波1|
+|`$BE07`|data|BGM [トラックデータ](@/music/index.md#track-data) スターブレイン戦 矩形波2|
+|`$BE3B`|data|BGM [トラックデータ](@/music/index.md#track-data) スターブレイン戦 三角波|
+|`$BE79`|data|BGM [トラックデータ](@/music/index.md#track-data) 面イントロ (フルパワー未満) 矩形波1|
+|`$BE92`|data|BGM [トラックデータ](@/music/index.md#track-data) 面イントロ (フルパワー未満) 矩形波2|
+|`$BEC3`|data|BGM [トラックデータ](@/music/index.md#track-data) 面イントロ (フルパワー未満) 三角波|
+|`$BEF5`|data|BGM [トラックデータ](@/music/index.md#track-data) 無音 矩形波1/矩形波2/三角波|
+|`$BEF8`|data|BGM [トラックデータ](@/music/index.md#track-data) 面ループ (フルパワー未満) 矩形波1|
+|`$BFAB`|data|BGM [トラックデータ](@/music/index.md#track-data) 面ループ (フルパワー未満) 矩形波2|
+|`$C02D`|data|BGM [トラックデータ](@/music/index.md#track-data) 面ループ (フルパワー未満) 三角波|
+|`$C0EB`|data|BGM [トラックデータ](@/music/index.md#track-data) 面イントロ (フルパワー) 矩形波1|
+|`$C10A`|data|BGM [トラックデータ](@/music/index.md#track-data) 面イントロ (フルパワー) 矩形波2|
+|`$C128`|data|BGM [トラックデータ](@/music/index.md#track-data) 面イントロ (フルパワー) 三角波|
+|`$C141`|data|BGM [トラックデータ](@/music/index.md#track-data) 面ループ (フルパワー) 矩形波1|
+|`$C1FE`|data|BGM [トラックデータ](@/music/index.md#track-data) 面ループ (フルパワー) 矩形波2|
+|`$C2A0`|data|BGM [トラックデータ](@/music/index.md#track-data) 面ループ (フルパワー) 三角波|
+|`$`|||
+|`$`|||
+|`$`|||
+|`$`|||
+|`$`|||
+|`$D48D`|data|各面の[地形設定](@/ground-format/index.md#setting)|
+|`$D50D`|data|地形パレットエントリ (4*43 Byte)|
+|`$D5B9`|data|各面の地形の[特殊セルデータ](@/ground-format/index.md#special-cell)へのポインタテーブル|
+|`$D5D9`|data|各面の地形の[圧縮データ](@/ground-format/index.md#compression)へのポインタテーブル|
 |`$`|||
 |`$`|||
 |`$`|||
