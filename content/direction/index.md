@@ -12,7 +12,7 @@ updated = 2021-06-15
 
 ![object-direction](object-direction.png) ![bullet-direction](bullet-direction.png)
 
-敵弾に関しては、通常のプレイではスピード 0 しか目にすることはない。[弾高速化フラグ](@/enemy-group/index.md#param-accel-shot)を持つ敵は[テュラのみ](@/enemy-group/index.md#table)だが、テュラは普通にプレイするとかなり早めに出現し、[ランク上昇条件](@/enemy-group/index.md#param-rank)を満たさないため。  
+敵弾に関しては、通常のプレイではスピード 0 しか目にすることはない。[弾高速化フラグ](@/enemy-group/index.md#param-accel-shot)を持つ敵は[テュラのみ](@/enemy-group/index.md#table)だが、テュラは普通にプレイすると[かなり早めに出現](@/spawn-table/index.md#data-group-7)し、[ランク上昇条件](@/enemy-group/index.md#param-rank)を満たさないため。  
 敵弾スピードの理論上の最大値は 2 と思われる。ルイドを利用して遅回しを行い、最初のテュラx2を9面以降で出現させてからわざと死んでテーブルを戻すことでこれを実現できる([movie](turoa.zip))。
 
 ## 2点間の向きの計算 {#aim}
