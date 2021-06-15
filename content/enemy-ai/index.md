@@ -95,10 +95,10 @@ updated = 2021-06-15
 敵をオペコードの表す[方向](@/direction/index.md)へ移動させる。  
 `inv_x`, `inv_y` の設定に従って方向が反転する。
 
-敵が[高速化フラグ](@/enemy-group/index.md#group-accel)を持つとき、特定条件下でスピードが増す。
+敵が[高速化フラグ](@/enemy-group/index.md#param-accel)を持つとき、特定条件下でスピードが増す。
 
 実行を**中断**する。  
-ただし、敵が[再行動フラグ](@/enemy-group/index.md#group-extra-act)を持つとき、特定条件下でさらに 1 ステップ実行する。
+ただし、敵が[再行動フラグ](@/enemy-group/index.md#param-extra-act)を持つとき、特定条件下でさらに 1 ステップ実行する。
 
 #### `0x40` (`jump`) {#op-jump}
 
@@ -240,7 +240,7 @@ updated = 2021-06-15
 オペコード下位4bitは意味を持たない(何らかの拡張予定があったのかも)。
 
 自機狙い弾を撃つことを試みる。  
-[弾抑制フラグ](@/enemy-group/index.md#group-noshot)、[弾高速化フラグ](@/enemy-group/index.md#group-accel-shot)、[誘導弾化フラグ](@/enemy-group/index.md#group-homing-shot)の影響を受ける。
+[弾抑制フラグ](@/enemy-group/index.md#param-noshot)、[弾高速化フラグ](@/enemy-group/index.md#param-accel-shot)、[誘導弾化フラグ](@/enemy-group/index.md#param-homing-shot)の影響を受ける。
 
 [敵弾ランク](@/enemy-shot/index.md#rank)などの影響により、発射がキャンセルされることがある。  
 また、誘導弾化フラグを含む[各種条件](@/enemy-shot/index.md#aim)により誘導弾になることがある。
