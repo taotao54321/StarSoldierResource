@@ -111,6 +111,15 @@ updated = 2021-06-15
 |`$9545`|code|自機狙い弾生成ルーチン|
 |`$9597`|code|方向指定弾生成を試みるルーチン|
 |`$95C2`|code|方向指定弾生成ルーチン|
+|`$9602`|code|敵出現処理ルーチン (道中ループから呼ばれる)|
+|`$9655`|code|敵編隊パラメータのロード/敵個体出現ルーチン|
+|`$967B`|code|敵編隊パラメータをロードするルーチン|
+|`$96C0`|code|敵編隊内個体出現ルーチン|
+|`$96EA`|code|敵1体出現ルーチン|
+|`$9740`|code|敵リストの空きスロットを探すルーチン|
+|`$9750`|code|敵リストの空きスロット数を得るルーチン|
+|`$976B`|code|[2点間の向き](@/direction/index.md#aim)計算ルーチン|
+|`$97DD`|data|[2点間の向き](@/direction/index.md#aim)計算ルーチン 補助データ|
 |`$`|||
 |`$`|||
 |`$`|||
@@ -238,9 +247,16 @@ updated = 2021-06-15
 |`$D50D`|data|地形パレットエントリ (4*43 Byte)|
 |`$D5B9`|data|各面の地形の[特殊セルデータ](@/ground-format/index.md#special-cell)へのポインタテーブル|
 |`$D5D9`|data|各面の地形の[圧縮データ](@/ground-format/index.md#compression)へのポインタテーブル|
-|`$`|||
-|`$`|||
-|`$`|||
-|`$`|||
-|`$`|||
+|`$D619`|data|地形セルIDに対応するBGパレットインデックス|
+|`$D6B0`|data|地形セルIDに対応する CHR タイルたち ((左上, 右上, 左下, 右下) の4枚組)|
+|`$D90C`|data|地形の[圧縮データ](@/ground-format/index.md#compression) 3面前半/4面前半/9面前半/10面前半|
+|`$DED9`|data|地形の[圧縮データ](@/ground-format/index.md#compression) 7面前半/8面前半/13面前半/14面前半|
+|`$E367`|data|地形の[圧縮データ](@/ground-format/index.md#compression) 1面前半/2面前半/5面前半/6面前半/16面前半|
+|`$E73D`|data|地形の[圧縮データ](@/ground-format/index.md#compression) 11面前半/12面前半/15面前半|
+|`$EAD8`|data|地形の[圧縮データ](@/ground-format/index.md#compression) 3面後半/4面後半/9面後半/10面後半|
+|`$EE85`|data|地形の[圧縮データ](@/ground-format/index.md#compression) 7面後半/13面後半/14面後半|
+|`$F305`|data|地形の[圧縮データ](@/ground-format/index.md#compression) 1面後半/2面後半/5面後半/6面後半|
+|`$F765`|data|地形の[圧縮データ](@/ground-format/index.md#compression) 11面後半/12面後半/15面後半|
+|`$FC7A`|data|地形の[圧縮データ](@/ground-format/index.md#compression) 8面後半/16面後半|
+|`$FFD6-$FFF9`||(未使用)|
 |`$FFFA`|data|割り込みベクタ|
