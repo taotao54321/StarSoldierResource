@@ -1,7 +1,7 @@
 +++
 title = "敵AI"
 date = 2021-06-10
-updated = 2021-06-12
+updated = 2021-06-15
 +++
 
 ほとんどの敵のAIはいわゆる[バイトコード](https://ja.wikipedia.org/wiki/%E3%83%90%E3%82%A4%E3%83%88%E3%82%B3%E3%83%BC%E3%83%89)で実装されている。  
@@ -135,9 +135,13 @@ updated = 2021-06-12
 
 #### `0x60..=0x6F` (`shoot_direction`) {#op-shoot-direction}
 
-1Byte 命令。
+1Byte 命令。ゲーム内では未使用。
 
-ゲーム内では未使用(TODO: 詳細)。
+方向指定弾を撃つことを試みる。  
+[敵編隊パラメータ](@/enemy-group/index.md)の影響を受けない。
+
+[敵弾ランク](@/enemy-shot/index.md#rank)などの影響により、発射がキャンセルされることがある。  
+また、[特定条件](@/enemy-shot/index.md#direction)で誘導弾になることがある。
 
 実行を継続する。
 
@@ -238,7 +242,8 @@ updated = 2021-06-12
 自機狙い弾を撃つことを試みる。  
 [弾抑制フラグ](@/enemy-group/index.md#group-noshot)、[弾高速化フラグ](@/enemy-group/index.md#group-accel-shot)、[誘導弾化フラグ](@/enemy-group/index.md#group-homing-shot)の影響を受ける。
 
-TODO: 発射間隔など
+[敵弾ランク](@/enemy-shot/index.md#rank)などの影響により、発射がキャンセルされることがある。  
+また、誘導弾化フラグを含む[各種条件](@/enemy-shot/index.md#aim)により誘導弾になることがある。
 
 #### `0xF0` (`restore_music`) {#op-restore-music}
 
