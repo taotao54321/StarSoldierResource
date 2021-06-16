@@ -1,7 +1,7 @@
 +++
 title = "PRG-ROM マップ"
 date = 2021-06-13
-updated = 2021-06-15
+updated = 2021-06-16
 +++
 
 ## 概要
@@ -249,11 +249,75 @@ updated = 2021-06-15
 |`$C141`|data|BGM [トラックデータ](@/music/index.md#track-data) 面ループ (フルパワー) 矩形波1|
 |`$C1FE`|data|BGM [トラックデータ](@/music/index.md#track-data) 面ループ (フルパワー) 矩形波2|
 |`$C2A0`|data|BGM [トラックデータ](@/music/index.md#track-data) 面ループ (フルパワー) 三角波|
-|`$`|||
-|`$`|||
-|`$`|||
-|`$`|||
-|`$`|||
+|`$C344`|data|メタスプライトデータ ((tile,attr) が 左上、左下、右上、右下 の順に並んでいる)|
+|`$C7C4`|data|敵IDごとの[各種フラグ](@/enemy-group/index.md#param) (bit0:弾抑制, bit1:弾高速化, bit2:誘導弾化, bit3:再行動, bit4:高速化)|
+|`$C7E4`|data|敵IDごとの[難易度](@/enemy-group/index.md#param)|
+|`$C804`|data|敵IDごとの[編隊パラメータ](@/enemy-group/index.md#param)データへのポインタテーブル|
+|`$C842`|data|[敵編隊パラメータデータ](#addr-C804) レウス (ID:0x01)|
+|`$C851`|data|バイトコード レウス (ID:0x01)|
+|`$C891`|data|[敵編隊パラメータデータ](#addr-C804) テュラ (ID:0x02)|
+|`$C8A0`|data|バイトコード テュラ (ID:0x02)|
+|`$C8C9`|data|[敵編隊パラメータデータ](#addr-C804) エイク (ID:0x03)|
+|`$C8D5`|data|バイトコード エイク (ID:0x03)|
+|`$C8FE`|data|[敵編隊パラメータデータ](#addr-C804) ソレル (ID:0x04)|
+|`$C90D`|data|バイトコード ソレル (ID:0x04)|
+|`$C92A`|data|[敵編隊パラメータデータ](#addr-C804) ディダ (ID:0x05)|
+|`$C939`|data|バイトコード ディダ (ID:0x05)|
+|`$C986`|data|[敵編隊パラメータデータ](#addr-C804) ペンド (ID:0x06)|
+|`$C999`|data|バイトコード ペンド (ID:0x06)|
+|`$C9B1`|data|[敵編隊パラメータデータ](#addr-C804) リアード (ID:0x07)|
+|`$C9C0`|data|バイトコード リアード (ID:0x07)|
+|`$CA4A`|data|[敵編隊パラメータデータ](#addr-C804) バタフ (ID:0x08)|
+|`$CA59`|data|バイトコード バタフ (ID:0x08)|
+|`$CA75`|data|[敵編隊パラメータデータ](#addr-C804) スラント (ID:0x09)|
+|`$CA8C`|data|バイトコード スラント (ID:0x09)|
+|`$CACC`|data|[敵編隊パラメータデータ](#addr-C804) カルゴ (ID:0x0A)|
+|`$CADB`|data|バイトコード カルゴ (ID:0x0A)|
+|`$CB1E`|data|[敵編隊パラメータデータ](#addr-C804) アトリス (ID:0x0B)|
+|`$CB2D`|data|バイトコード アトリス (ID:0x0B)|
+|`$CB69`|data|[敵編隊パラメータデータ](#addr-C804) メルス (ID:0x0C)|
+|`$CB78`|data|バイトコード メルス (ID:0x0C)|
+|`$CB9C`|data|[敵編隊パラメータデータ](#addr-C804) プリング (ID:0x0D)|
+|`$CBAB`|data|バイトコード プリング (ID:0x0D)|
+|`$CBE8`|data|[敵編隊パラメータデータ](#addr-C804) ヤール (ID:0x0E)|
+|`$CBF7`|data|バイトコード ヤール (ID:0x0E)|
+|`$CC46`|data|[敵編隊パラメータデータ](#addr-C804) ビーグ (ID:0x0F)|
+|`$CC55`|data|バイトコード ビーグ (ID:0x0F)|
+|`$CC6F`|data|[敵編隊パラメータデータ](#addr-C804) メーバ (ID:0x10)|
+|`$CC7E`|data|バイトコード メーバ (ID:0x10)|
+|`$CCA9`|data|[敵編隊パラメータデータ](#addr-C804) ルイド (ID:0x11)|
+|`$CCB4`|data|[敵編隊パラメータデータ](#addr-C804) ジェラ (ID:0x12)|
+|`$CCC3`|data|バイトコード ジェラ (ID:0x12)|
+|`$CCE9`|data|[敵編隊パラメータデータ](#addr-C804) ルダン (ID:0x13)|
+|`$CCF8`|data|バイトコード ルダン (ID:0x13)|
+|`$CD2C`|data|[敵編隊パラメータデータ](#addr-C804) リューク (ID:0x14)|
+|`$CD34`|data|[敵編隊パラメータデータ](#addr-C804) ビータ (ID:0x15)|
+|`$CD43`|data|バイトコード ビータ (ID:0x15)|
+|`$CD67`|data|[敵編隊パラメータデータ](#addr-C804) テミス (ID:0x16)|
+|`$CD76`|data|バイトコード テミス (ID:0x16)|
+|`$CDB6`|data|[敵編隊パラメータデータ](#addr-C804) パトラ (ID:0x17)|
+|`$CDC5`|data|バイトコード パトラ (ID:0x17)|
+|`$CDDE`|data|[敵編隊パラメータデータ](#addr-C804) ドラク (ID:0x18)|
+|`$CDED`|data|バイトコード ドラク (ID:0x18)|
+|`$CE18`|data|[敵編隊パラメータデータ](#addr-C804) プリズン (ID:0x19)|
+|`$CE27`|data|バイトコード プリズン (ID:0x19)|
+|`$CE3F`|data|[敵編隊パラメータデータ](#addr-C804) カディス (ID:0x1A)|
+|`$CE4E`|data|バイトコード カディス (ID:0x1A)|
+|`$CE84`|data|[敵編隊パラメータデータ](#addr-C804) ステリア (ID:0x1B)|
+|`$CE93`|data|バイトコード ステリア (ID:0x1B)|
+|`$CEA7`|data|[敵編隊パラメータデータ](#addr-C804) リーデ (ID:0x1C)|
+|`$CEB6`|data|バイトコード リーデ (ID:0x1C)|
+|`$CEDE`|data|[敵編隊パラメータデータ](#addr-C804) グハ (ID:0x1D)|
+|`$CEE7`|data|バイトコード グハ (ID:0x1D)|
+|`$CEFC`|data|[敵編隊パラメータデータ](#addr-C804) ジェリコ (ID:0x1E)|
+|`$CF0B`|data|バイトコード ジェリコ (ID:0x1E)|
+|`$CF70`|data|[敵編隊パラメータデータ](#addr-C804) ラザロ (ID:0x1F)|
+|`$CF7B`|data|バイトコード ラザロ (ID:0x1F)|
+|`$D044`|data|CHR バンク切り替え用データ ([bus conflict](https://wiki.nesdev.com/w/index.php/Bus_conflict) 回避用)|
+|`$D048`|data||
+|`$D250`|data||
+|`$D30D`|data|[敵編隊出現テーブル](@/spawn-table/index.md)データ (bit0-5:敵ID, bit6:ボスフラグ, bit7:複合禁止フラグ)|
+|`$D40D`|data|乱数表|
 |`$D48D`|data|各面の[地形設定](@/ground-format/index.md#setting)|
 |`$D50D`|data|地形パレットエントリ (4*43 Byte)|
 |`$D5B9`|data|各面の地形の[特殊セルデータ](@/ground-format/index.md#special-cell)へのポインタテーブル|
@@ -271,3 +335,17 @@ updated = 2021-06-15
 |`$FC7A`|data|地形の[圧縮データ](@/ground-format/index.md#compression) 8面後半/16面後半|
 |`$FFD6-$FFF9`||(未使用)|
 |`$FFFA`|data|割り込みベクタ|
+
+## `$C804` - 敵IDごとの[編隊パラメータ](@/enemy-group/index.md#param)データへのポインタテーブル {#addr-C804}
+
+ポインタが指す先のデータ形式:
+
+| 型   | 内容                                |
+| --   | --                                  |
+| ptr  | バイトコードへのポインタ            |
+| u8   | 初期座標x                           |
+| u8   | 初期座標y                           |
+| u8   | 基本メタスプライトID                |
+| u8   | 出現間隔                            |
+| u8   | 出現数                              |
+| u8[] | エントリポイント (出現数と同じ個数) |
