@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <title>スターソルジャー (FC) 解析資料 - 敵編隊</title>
+
+  <link rel="stylesheet" href="https://taotao54321.github.io/StarSoldierResource/main.css">
+</head>
+<body>
+
+
+<header>
+  <a href="https://taotao54321.github.io/StarSoldierResource/">スターソルジャー (FC) 解析資料</a>
+</header>
+
+<p>
+Published on: 2021-06-12
+
+<br>Updated on: 2021-06-15
+
+</p>
+
+<h1>敵編隊</h1>
+
+<h2 id="param">敵編隊パラメータ</h2>
+<p>敵はオブジェクトIDごとに編隊に関するパラメータを持っている。</p>
+<p>固定パラメータは以下の通り:</p>
+<table><thead><tr><th>項目</th><th>概要</th></tr></thead><tbody>
+<tr><td><a href="https://taotao54321.github.io/StarSoldierResource/enemy-group/#param-boss">ボス属性</a></td><td>被弾時の挙動に影響する。道中の敵ではジェリコ、ラザロのみ真。</td></tr>
+<tr><td>難易度</td><td>現在の面がこの値以上のとき、ランク上昇や挙動の変化が起こる。</td></tr>
+<tr><td><a href="https://taotao54321.github.io/StarSoldierResource/enemy-group/#param-noshot">弾抑制フラグ</a></td><td>特定条件下で自機狙い弾を撃たない。</td></tr>
+<tr><td><a href="https://taotao54321.github.io/StarSoldierResource/enemy-group/#param-accel-shot">弾高速化フラグ</a></td><td>特定条件下で自機狙い弾が高速化する。</td></tr>
+<tr><td><a href="https://taotao54321.github.io/StarSoldierResource/enemy-group/#param-homing-shot">誘導弾化フラグ</a></td><td>特定条件下で自機狙い弾が必ず誘導弾になる。</td></tr>
+<tr><td><a href="https://taotao54321.github.io/StarSoldierResource/enemy-group/#param-extra-act">再行動フラグ</a></td><td>特定条件下で移動後に再行動する。</td></tr>
+<tr><td><a href="https://taotao54321.github.io/StarSoldierResource/enemy-group/#param-accel">高速化フラグ</a></td><td>特定条件下で高速化する。</td></tr>
+<tr><td>基本メタスプライトID</td><td>仮想マシンの <code>set_sprite</code> 命令はこの値に対する相対値として解釈される。</td></tr>
+<tr><td>初期座標</td><td></td></tr>
+<tr><td>出現間隔</td><td>敵1体が出現するまでの待ちフレーム数。0 の場合、全個体が一斉出現する。</td></tr>
+<tr><td>出現数</td><td></td></tr>
+<tr><td>バイトコード</td><td><a href="https://taotao54321.github.io/StarSoldierResource/enemy-ai/">敵AI</a>を参照。</td></tr>
+<tr><td>エントリポイント</td><td>バイトコードの実行開始アドレス。敵1体ごとに設定されている。</td></tr>
+</tbody></table>
+<p>可変パラメータは以下の通り:</p>
+<table><thead><tr><th>項目</th><th>概要</th></tr></thead><tbody>
+<tr><td><a href="https://taotao54321.github.io/StarSoldierResource/enemy-group/#param-rank">ランク</a></td><td>値に応じて敵の挙動が変化する。初期値は 0 で、最大 7 まで上がる。</td></tr>
+</tbody></table>
+<h3 id="param-boss">ボス属性</h3>
+<p>敵が被弾したとき、</p>
+<ul>
+<li>敵がボス属性を持つ場合、HP 0 なら死亡し、さもなくば HP が 1 減る。</li>
+<li>敵がボス属性を持たない場合、仮想マシンの被弾時ジャンプ先が設定されていればそこへジャンプし、さもなくば死亡する。</li>
+</ul>
+<h3 id="param-noshot">弾抑制フラグ</h3>
+<p>弾抑制フラグを持つ敵は、ランク 3 以下では自機狙い弾を撃たない。</p>
+<h3 id="param-accel-shot">弾高速化フラグ</h3>
+<p>敵が弾高速化フラグを持つ場合、発射する自機狙い弾のスピードが <code>8*(ランク)/16</code> となる(切り捨て除算)。<br />
+これ以外の場合、自機狙い弾はスピード 0 である。</p>
+<h3 id="param-homing-shot">誘導弾化フラグ</h3>
+<p>敵が誘導弾化フラグを持ち、かつ2周目でランク 7 以上ならば、発射する自機狙い弾が必ず誘導弾になる。</p>
+<h3 id="param-extra-act">再行動フラグ</h3>
+<p>敵が再行動フラグを持ち、かつ <code>(現在の面) &gt;= (難易度) &amp;&amp; (ランク) &gt;= 4</code> ならば、移動後に仮想マシンを追加で 1 ステップ実行する(再行動に対する再行動は行わない)。</p>
+<h3 id="param-accel">高速化フラグ</h3>
+<p>敵が高速化フラグを持ち、かつ <code>(現在の面) &gt;= (難易度)</code> ならば、敵のスピード 1 以下の移動が高速化する:</p>
+<ul>
+<li>ランク 4 以上 6 以下ならばスピード +1</li>
+<li>ランク 7 以上ならばスピード +2</li>
+</ul>
+<h3 id="param-rank">ランク</h3>
+<p><code>(現在の面) &gt;= (難易度)</code> のとき、敵編隊が出現するたびに対応する敵オブジェクトのランクが 1 上がる。<br />
+2周目の場合は条件が変化し、<code>(現在の面)+2 &gt;= (難易度)</code> となる。</p>
+<p>ランクが 3 以上のときに自機が死ぬとランクが 2 下がる。</p>
+<h2 id="table">敵編隊データ</h2>
+<table><thead><tr><th>ID</th><th>名前</th><th align="center">ボス</th><th align="right">難易度</th><th align="center">弾抑制</th><th align="center">弾高速化</th><th align="center">誘導弾化</th><th align="center">再行動</th><th align="center">高速化</th><th align="right">出現間隔</th><th align="right">出現数</th></tr></thead><tbody>
+<tr><td>0x01</td><td>レウス</td><td align="center"></td><td align="right">10</td><td align="center"></td><td align="center"></td><td align="center"></td><td align="center">o</td><td align="center"></td><td align="right">15</td><td align="right">8</td></tr>
+<tr><td>0x02</td><td>テュラ</td><td align="center"></td><td align="right">9</td><td align="center"></td><td align="center">o</td><td align="center"></td><td align="center"></td><td align="center"></td><td align="right">4</td><td align="right">8</td></tr>
+<tr><td>0x03</td><td>エイク</td><td align="center"></td><td align="right">12</td><td align="center">o</td><td align="center"></td><td align="center"></td><td align="center"></td><td align="center"></td><td align="right">0</td><td align="right">5</td></tr>
+<tr><td>0x04</td><td>ソレル</td><td align="center"></td><td align="right">7</td><td align="center"></td><td align="center"></td><td align="center"></td><td align="center"></td><td align="center">o</td><td align="right">15</td><td align="right">8</td></tr>
+<tr><td>0x05</td><td>ディダ</td><td align="center"></td><td align="right">8</td><td align="center"></td><td align="center"></td><td align="center"></td><td align="center"></td><td align="center">o</td><td align="right">10</td><td align="right">8</td></tr>
+<tr><td>0x06</td><td>ペンド</td><td align="center"></td><td align="right">7</td><td align="center">o</td><td align="center"></td><td align="center"></td><td align="center"></td><td align="center"></td><td align="right">15</td><td align="right">12</td></tr>
+<tr><td>0x07</td><td>リアード</td><td align="center"></td><td align="right">1</td><td align="center"></td><td align="center"></td><td align="center"></td><td align="center"></td><td align="center"></td><td align="right">10</td><td align="right">8</td></tr>
+<tr><td>0x08</td><td>バタフ</td><td align="center"></td><td align="right">13</td><td align="center"></td><td align="center"></td><td align="center"></td><td align="center"></td><td align="center">o</td><td align="right">10</td><td align="right">8</td></tr>
+<tr><td>0x09</td><td>スラント</td><td align="center"></td><td align="right">1</td><td align="center"></td><td align="center"></td><td align="center"></td><td align="center"></td><td align="center"></td><td align="right">10</td><td align="right">16</td></tr>
+<tr><td>0x0A</td><td>カルゴ</td><td align="center"></td><td align="right">8</td><td align="center"></td><td align="center"></td><td align="center"></td><td align="center"></td><td align="center">o</td><td align="right">5</td><td align="right">8</td></tr>
+<tr><td>0x0B</td><td>アトリス</td><td align="center"></td><td align="right">3</td><td align="center">o</td><td align="center"></td><td align="center"></td><td align="center"></td><td align="center"></td><td align="right">10</td><td align="right">8</td></tr>
+<tr><td>0x0C</td><td>メルス</td><td align="center"></td><td align="right">1</td><td align="center">o</td><td align="center"></td><td align="center"></td><td align="center"></td><td align="center"></td><td align="right">12</td><td align="right">8</td></tr>
+<tr><td>0x0D</td><td>プリング</td><td align="center"></td><td align="right">7</td><td align="center"></td><td align="center"></td><td align="center"></td><td align="center"></td><td align="center">o</td><td align="right">20</td><td align="right">8</td></tr>
+<tr><td>0x0E</td><td>ヤール</td><td align="center"></td><td align="right">1</td><td align="center"></td><td align="center"></td><td align="center"></td><td align="center"></td><td align="center"></td><td align="right">8</td><td align="right">8</td></tr>
+<tr><td>0x0F</td><td>ビーグ</td><td align="center"></td><td align="right">11</td><td align="center"></td><td align="center"></td><td align="center"></td><td align="center"></td><td align="center">o</td><td align="right">20</td><td align="right">8</td></tr>
+<tr><td>0x10</td><td>メーバ</td><td align="center"></td><td align="right">10</td><td align="center"></td><td align="center"></td><td align="center"></td><td align="center">o</td><td align="center"></td><td align="right">10</td><td align="right">8</td></tr>
+<tr><td>0x11</td><td>ルイド</td><td align="center"></td><td align="right">1</td><td align="center"></td><td align="center"></td><td align="center"></td><td align="center"></td><td align="center"></td><td align="right">30</td><td align="right">4</td></tr>
+<tr><td>0x12</td><td>ジェラ</td><td align="center"></td><td align="right">9</td><td align="center"></td><td align="center"></td><td align="center"></td><td align="center">o</td><td align="center"></td><td align="right">30</td><td align="right">8</td></tr>
+<tr><td>0x13</td><td>ルダン</td><td align="center"></td><td align="right">15</td><td align="center"></td><td align="center"></td><td align="center">o</td><td align="center"></td><td align="center"></td><td align="right">10</td><td align="right">8</td></tr>
+<tr><td>0x14</td><td>リューク</td><td align="center"></td><td align="right">1</td><td align="center"></td><td align="center"></td><td align="center"></td><td align="center"></td><td align="center"></td><td align="right">0</td><td align="right">1</td></tr>
+<tr><td>0x15</td><td>ビータ</td><td align="center"></td><td align="right">4</td><td align="center">o</td><td align="center"></td><td align="center"></td><td align="center"></td><td align="center"></td><td align="right">30</td><td align="right">8</td></tr>
+<tr><td>0x16</td><td>テミス</td><td align="center"></td><td align="right">4</td><td align="center">o</td><td align="center"></td><td align="center"></td><td align="center"></td><td align="center"></td><td align="right">30</td><td align="right">8</td></tr>
+<tr><td>0x17</td><td>パトラ</td><td align="center"></td><td align="right">5</td><td align="center">o</td><td align="center"></td><td align="center"></td><td align="center"></td><td align="center"></td><td align="right">30</td><td align="right">8</td></tr>
+<tr><td>0x18</td><td>ドラク</td><td align="center"></td><td align="right">15</td><td align="center"></td><td align="center"></td><td align="center">o</td><td align="center"></td><td align="center"></td><td align="right">30</td><td align="right">8</td></tr>
+<tr><td>0x19</td><td>プリズン</td><td align="center"></td><td align="right">10</td><td align="center"></td><td align="center"></td><td align="center">o</td><td align="center">o</td><td align="center"></td><td align="right">30</td><td align="right">8</td></tr>
+<tr><td>0x1A</td><td>カディス</td><td align="center"></td><td align="right">2</td><td align="center">o</td><td align="center"></td><td align="center"></td><td align="center"></td><td align="center"></td><td align="right">20</td><td align="right">8</td></tr>
+<tr><td>0x1B</td><td>ステリア</td><td align="center"></td><td align="right">5</td><td align="center">o</td><td align="center"></td><td align="center"></td><td align="center"></td><td align="center"></td><td align="right">20</td><td align="right">8</td></tr>
+<tr><td>0x1C</td><td>リーデ</td><td align="center"></td><td align="right">3</td><td align="center">o</td><td align="center"></td><td align="center"></td><td align="center"></td><td align="center"></td><td align="right">10</td><td align="right">8</td></tr>
+<tr><td>0x1D</td><td>グハ</td><td align="center"></td><td align="right">11</td><td align="center"></td><td align="center"></td><td align="center">o</td><td align="center">o</td><td align="center"></td><td align="right">0</td><td align="right">2</td></tr>
+<tr><td>0x1E</td><td>ジェリコ</td><td align="center">o</td><td align="right">1</td><td align="center"></td><td align="center"></td><td align="center"></td><td align="center"></td><td align="center"></td><td align="right">0</td><td align="right">8</td></tr>
+<tr><td>0x1F</td><td>ラザロ</td><td align="center">o</td><td align="right">1</td><td align="center"></td><td align="center"></td><td align="center"></td><td align="center"></td><td align="center"></td><td align="right">0</td><td align="right">4</td></tr>
+</tbody></table>
+
+
+
+</body>
+</html>

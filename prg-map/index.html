@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <title>スターソルジャー (FC) 解析資料 - PRG-ROM マップ</title>
+
+  <link rel="stylesheet" href="https://taotao54321.github.io/StarSoldierResource/main.css">
+</head>
+<body>
+
+
+<header>
+  <a href="https://taotao54321.github.io/StarSoldierResource/">スターソルジャー (FC) 解析資料</a>
+</header>
+
+<p>
+Published on: 2021-06-13
+
+<br>Updated on: 2021-06-21
+
+</p>
+
+<h1>PRG-ROM マップ</h1>
+
+<h2 id="gai-yao">概要</h2>
+<table><thead><tr><th>アドレス</th><th>種別</th><th>内容</th></tr></thead><tbody>
+<tr><td><code>$8000</code></td><td>data</td><td>文字列 &quot;V4/11A&quot;</td></tr>
+<tr><td><code>$8006</code></td><td>code</td><td><code>lda $2007</code> と等価</td></tr>
+<tr><td><code>$800A</code></td><td>code</td><td>RESET ルーチン</td></tr>
+<tr><td><code>$8088</code></td><td>data</td><td>ソフトリセット判定用 magic 文字列 &quot;NONTAMA.&quot;</td></tr>
+<tr><td><code>$8090</code></td><td>code</td><td>ワープ地形に触れたときの処理を行うルーチン</td></tr>
+<tr><td><code>$8106</code></td><td>code</td><td>自機が完全に死んだときの処理を行うルーチン</td></tr>
+<tr><td><code>$8126</code></td><td>code</td><td>現在の面からリスタートするルーチン</td></tr>
+<tr><td><code>$8143</code></td><td>code</td><td>ゲームシーン (デモ)</td></tr>
+<tr><td><code>$8147</code></td><td>code</td><td>ゲームシーン</td></tr>
+<tr><td><code>$81AE</code></td><td>code</td><td>面シーン</td></tr>
+<tr><td><code>$81BC</code></td><td>code</td><td>面シーン 出撃/再出撃処理</td></tr>
+<tr><td><code>$8233</code></td><td>code</td><td>面シーン 道中ループ</td></tr>
+<tr><td><code>$828E</code></td><td>code</td><td>面シーン スターブレイン出現処理</td></tr>
+<tr><td><code>$82CD</code></td><td>code</td><td>面シーン スターブレイン下降中ループ</td></tr>
+<tr><td><code>$830A</code></td><td>code</td><td>面シーン スターブレイン戦ループ</td></tr>
+<tr><td><code>$8345</code></td><td>code</td><td>面シーン スターブレイン撃破時の処理</td></tr>
+<tr><td><code>$83B0</code></td><td>code</td><td>エンディングシーン</td></tr>
+<tr><td><code>$83F3</code></td><td>code</td><td>スターブレイン逃走ルーチン</td></tr>
+<tr><td><code>$8482</code></td><td>code</td><td>ゲームオーバーシーン</td></tr>
+<tr><td><code>$84CD</code></td><td>code</td><td>現在の面の地形関連ポインタおよび地形設定をロードするルーチン</td></tr>
+<tr><td><code>$8506</code></td><td>code</td><td>地形全体を空白セルで埋め、地形処理を無効化するルーチン</td></tr>
+<tr><td><code>$8512</code></td><td>code</td><td>地形全体を空白セルで埋めるルーチン</td></tr>
+<tr><td><code>$8525</code></td><td>code</td><td>敵編隊出現関連変数、および敵編隊ランクの初期化</td></tr>
+<tr><td><code>$8540</code></td><td>code</td><td>全てのオブジェクトを消すルーチン</td></tr>
+<tr><td><code>$854B</code></td><td>code</td><td>全ての敵弾を消すルーチン</td></tr>
+<tr><td><code>$8556</code></td><td>code</td><td>全ての自弾を消すルーチン</td></tr>
+<tr><td><code>$8561</code></td><td>code</td><td>スコアを 0 に初期化するルーチン</td></tr>
+<tr><td><code>$8569</code></td><td>code</td><td>星のスプライトタイルと座標を初期化するルーチン</td></tr>
+<tr><td><code>$8579</code></td><td>code</td><td>地形全体を空白セルで埋め、<a href="https://taotao54321.github.io/StarSoldierResource/ram-map/#addr-0200">PPU データ転送キュー</a>および地形外観変更要求リングバッファを空にするルーチン</td></tr>
+<tr><td><code>$858B</code></td><td>code</td><td>自機初期化ルーチン</td></tr>
+<tr><td><code>$859E</code></td><td>data</td><td>スターブレイン戦 BGパレット</td></tr>
+<tr><td><code>$85AE</code></td><td>code</td><td>ゲームオーバー判定/処理ルーチン</td></tr>
+<tr><td><code>$85BE</code></td><td>code</td><td>現在の自機パワーに応じてBGMを変更するルーチン</td></tr>
+<tr><td><code>$85CD</code></td><td>code</td><td><code>A</code> で指定された通知を 160F 表示するルーチン</td></tr>
+<tr><td><code>$85D4</code></td><td>data</td><td>エンディング画面 <a href="https://taotao54321.github.io/StarSoldierResource/prg-map/#addr-AFFB">ランレングス圧縮BGデータ</a></td></tr>
+<tr><td><code>$85FC</code></td><td>code</td><td>自機の行動ルーチン (デモからの復帰もここで処理)</td></tr>
+<tr><td><code>$861B</code></td><td>code</td><td><a href="https://taotao54321.github.io/StarSoldierResource/ram-map/#addr-3E">自機状態</a>が小爆発状態の場合の処理</td></tr>
+<tr><td><code>$8638</code></td><td>code</td><td>タイトルシーン (<code>$B2D0</code>) へジャンプ</td></tr>
+<tr><td><code>$863B</code></td><td>code</td><td><a href="https://taotao54321.github.io/StarSoldierResource/ram-map/#addr-3E">自機状態</a>が不在状態の場合の処理</td></tr>
+<tr><td><code>$86B4</code></td><td>code</td><td><a href="https://taotao54321.github.io/StarSoldierResource/ram-map/#addr-3E">自機状態</a>がワープ状態/出撃状態の場合の処理</td></tr>
+<tr><td><code>$86E2</code></td><td>code</td><td><a href="https://taotao54321.github.io/StarSoldierResource/ram-map/#addr-3E">自機状態</a>がワープ状態2/出撃状態の場合の処理</td></tr>
+<tr><td><code>$86F1</code></td><td>code</td><td><a href="https://taotao54321.github.io/StarSoldierResource/ram-map/#addr-3E">自機状態</a>が出撃状態2の場合の処理</td></tr>
+<tr><td><code>$8706</code></td><td>code</td><td>自機の移動および地形との相互作用ルーチン</td></tr>
+<tr><td><code>$875D</code></td><td>code</td><td>自機と地形との相互作用ルーチン</td></tr>
+<tr><td><code>$87EC</code></td><td>data</td><td>自機パワーに対応する自機スピード</td></tr>
+<tr><td><code>$87F1</code></td><td>code</td><td>自弾の行動ルーチン</td></tr>
+<tr><td><code>$882D</code></td><td>code</td><td>レーザーを消すルーチン</td></tr>
+<tr><td><code>$8832</code></td><td>code</td><td>レーザーの行動ルーチン</td></tr>
+<tr><td><code>$8889</code></td><td>data</td><td>自弾の方向に対応する変位 (dy,dx)</td></tr>
+<tr><td><code>$8897</code></td><td>code</td><td>敵弾の行動ルーチン</td></tr>
+<tr><td><code>$8923</code></td><td>data</td><td>敵弾およびルイドの方向に対応する変位x</td></tr>
+<tr><td><code>$8963</code></td><td>data</td><td>敵弾およびルイドの方向に対応する変位y</td></tr>
+<tr><td><code>$89A3</code></td><td>code</td><td>オブジェクトの行動ルーチン</td></tr>
+<tr><td><code>$89E4</code></td><td>data</td><td>各種オブジェクトに対応する行動ルーチンへのポインタ</td></tr>
+<tr><td><code>$89F6</code></td><td>code</td><td>通常敵の行動ルーチン (通常敵=バイトコードで動く敵)</td></tr>
+<tr><td><code>$8A2B</code></td><td>code</td><td>通常敵の自機追尾/バイトコード実行ルーチン</td></tr>
+<tr><td><code>$8A62</code></td><td>code</td><td>通常敵のバイトコード実行ルーチン</td></tr>
+<tr><td><code>$8A7C</code></td><td>code</td><td>バイトコード <code>0x00..=0x3F</code> の処理</td></tr>
+<tr><td><code>$8AD9</code></td><td>code</td><td>通常敵の再行動、および画面外に出たときの消滅処理</td></tr>
+<tr><td><code>$8AFC</code></td><td>code</td><td>バイトコード <code>0x40</code> の処理</td></tr>
+<tr><td><code>$8B06</code></td><td>code</td><td>バイトコード <code>0x41..=0x4F</code> の処理</td></tr>
+<tr><td><code>$8B12</code></td><td>code</td><td>バイトコード <code>0x51</code> の処理</td></tr>
+<tr><td><code>$8B22</code></td><td>code</td><td>バイトコード <code>0x50</code>, <code>0x52..=0x5F</code> の処理</td></tr>
+<tr><td><code>$8B32</code></td><td>code</td><td>バイトコード <code>0x60..=0x6F</code> の処理</td></tr>
+<tr><td><code>$8B4A</code></td><td>code</td><td>バイトコード <code>0x70..=0x7F</code> の処理</td></tr>
+<tr><td><code>$8B5A</code></td><td>code</td><td>バイトコード <code>0x80..=0x8F</code> の処理</td></tr>
+<tr><td><code>$8B6C</code></td><td>code</td><td>バイトコード <code>0x90..=0x9F</code> の処理</td></tr>
+<tr><td><code>$8B8B</code></td><td>code</td><td>バイトコード <code>0xA0</code> の処理</td></tr>
+<tr><td><code>$8BA2</code></td><td>code</td><td>バイトコード <code>0xA1</code> の処理</td></tr>
+<tr><td><code>$8BB1</code></td><td>code</td><td>バイトコード <code>0xA2</code> の処理</td></tr>
+<tr><td><code>$8BBB</code></td><td>code</td><td>バイトコード <code>0xA3</code> の処理</td></tr>
+<tr><td><code>$8BC5</code></td><td>code</td><td>バイトコード <code>0xA4</code> の処理</td></tr>
+<tr><td><code>$8BD2</code></td><td>code</td><td>バイトコード <code>0xA5</code> の処理</td></tr>
+<tr><td><code>$8BF3</code></td><td>code</td><td>バイトコード <code>0xA6</code> の処理</td></tr>
+<tr><td><code>$8C14</code></td><td>code</td><td>バイトコード <code>0xB0..=0xB3</code> の処理</td></tr>
+<tr><td><code>$8C4E</code></td><td>code</td><td>バイトコード <code>0xC0..=0xCF</code> の処理</td></tr>
+<tr><td><code>$8C8F</code></td><td>code</td><td>バイトコード <code>0xF0</code> の処理</td></tr>
+<tr><td><code>$8C9D</code></td><td>code</td><td>バイトコード <code>0xF1..=0xFF</code> の処理</td></tr>
+<tr><td><code>$8CA2</code></td><td>code</td><td>ルイドの行動ルーチン</td></tr>
+<tr><td><code>$8D76</code></td><td>code</td><td>リュークの行動ルーチン</td></tr>
+<tr><td><code>$8E51</code></td><td>code</td><td>ソープラーの行動ルーチン</td></tr>
+<tr><td><code>$8E8D</code></td><td>data</td><td>ソープラーの変位x</td></tr>
+<tr><td><code>$8E99</code></td><td>code</td><td>スターブレインのコアの行動ルーチン</td></tr>
+<tr><td><code>$8F12</code></td><td>code</td><td>スターブレインの砲台の行動ルーチン</td></tr>
+<tr><td><code>$8F8E</code></td><td>code</td><td>パワーアップアイテムの行動ルーチン</td></tr>
+<tr><td><code>$8FDB</code></td><td>code</td><td>空中物の大爆発オブジェクトの行動ルーチン</td></tr>
+<tr><td><code>$9001</code></td><td>code</td><td>地上物の大爆発オブジェクトの行動ルーチン</td></tr>
+<tr><td><code>$9039</code></td><td>code</td><td>地上物の小爆発オブジェクトの行動ルーチン</td></tr>
+<tr><td><code>$9071</code></td><td>code</td><td>空中物の小爆発オブジェクトの行動ルーチン</td></tr>
+<tr><td><code>$9097</code></td><td>data</td><td>オブジェクトの方向に対応する変位x</td></tr>
+<tr><td><code>$90D7</code></td><td>data</td><td>オブジェクトの方向に対応する変位y</td></tr>
+<tr><td><code>$9117</code></td><td>code</td><td>乱数生成ルーチン</td></tr>
+<tr><td><code>$912A</code></td><td>code</td><td>スターブレインの移動処理/撃破中の処理ルーチン</td></tr>
+<tr><td><code>$9216</code></td><td>data</td><td>スターブレイン撃破後BGデータ (<a href="https://taotao54321.github.io/StarSoldierResource/ram-map/#addr-0200">PPU データ転送キュー</a>形式)</td></tr>
+<tr><td><code>$9243</code></td><td>data</td><td>スターブレイン戦 PPU スクロールx の上限値 (ビッグ, 通常)</td></tr>
+<tr><td><code>$9245</code></td><td>data</td><td>スターブレイン戦 PPU スクロールx の下限値 (ビッグ, 通常)</td></tr>
+<tr><td><code>$9247</code></td><td>data</td><td>スターブレイン戦 PPU スクロールy の上限値 (ビッグ, 通常)</td></tr>
+<tr><td><code>$9249</code></td><td>data</td><td>スターブレイン戦 PPU スクロールy の下限値 (ビッグ, 通常)</td></tr>
+<tr><td><code>$924B</code></td><td>code</td><td>スターブレイン戦 撃破演出ルーチン (条件を満たすとき、8F に1回爆発オブジェクトを生成)</td></tr>
+<tr><td><code>$933C</code></td><td>data</td><td>スターブレイン撃破直後の爆発オブジェクトのVRAM空間 (512x480) 内座標 (x,y)</td></tr>
+<tr><td><code>$934C</code></td><td>code</td><td>スターブレイン下降中のHP回復/BG書き込みルーチン</td></tr>
+<tr><td><code>$9385</code></td><td>code</td><td>レーザー切り替え/武器発射ルーチン</td></tr>
+<tr><td><code>$93ED</code></td><td>code</td><td>自弾生成ルーチン</td></tr>
+<tr><td><code>$9402</code></td><td>code</td><td>自弾 (5way 上方向) 生成ルーチン</td></tr>
+<tr><td><code>$9425</code></td><td>code</td><td>自弾 (2way) 生成ルーチン</td></tr>
+<tr><td><code>$9469</code></td><td>code</td><td>自弾 (3way) 生成ルーチン</td></tr>
+<tr><td><code>$948F</code></td><td>code</td><td>自弾 (5way) 生成ルーチン</td></tr>
+<tr><td><code>$9520</code></td><td>code</td><td>自機狙い弾生成を試みるルーチン</td></tr>
+<tr><td><code>$9545</code></td><td>code</td><td>自機狙い弾生成ルーチン</td></tr>
+<tr><td><code>$9597</code></td><td>code</td><td>方向指定弾生成を試みるルーチン</td></tr>
+<tr><td><code>$95C2</code></td><td>code</td><td>方向指定弾生成ルーチン</td></tr>
+<tr><td><code>$9602</code></td><td>code</td><td>敵出現処理ルーチン (道中ループから呼ばれる)</td></tr>
+<tr><td><code>$9655</code></td><td>code</td><td>敵編隊パラメータのロード/敵個体出現ルーチン</td></tr>
+<tr><td><code>$967B</code></td><td>code</td><td>敵編隊パラメータをロードするルーチン</td></tr>
+<tr><td><code>$96C0</code></td><td>code</td><td>敵編隊内個体出現ルーチン</td></tr>
+<tr><td><code>$96EA</code></td><td>code</td><td>敵1体出現ルーチン</td></tr>
+<tr><td><code>$9740</code></td><td>code</td><td>敵リストの空きスロットを探すルーチン</td></tr>
+<tr><td><code>$9750</code></td><td>code</td><td>敵リストの空きスロット数を得るルーチン</td></tr>
+<tr><td><code>$976B</code></td><td>code</td><td><a href="https://taotao54321.github.io/StarSoldierResource/direction/#aim">2点間の向き</a>計算ルーチン</td></tr>
+<tr><td><code>$97DD</code></td><td>data</td><td><a href="https://taotao54321.github.io/StarSoldierResource/direction/#aim">2点間の向き</a>計算ルーチン 補助データ</td></tr>
+<tr><td><code>$97F5</code></td><td>code</td><td>スターブレインのコア/砲台生成ルーチン</td></tr>
+<tr><td><code>$987D</code></td><td>data</td><td>スターブレイン構成オブジェクトのVRAM空間 (512x480) 内座標 (x,y): (u16be,u8)</td></tr>
+<tr><td><code>$988F</code></td><td>code</td><td><a href="https://taotao54321.github.io/StarSoldierResource/enemy-shot/#rank">敵弾ランク</a>とそれに依存する値を計算するルーチン</td></tr>
+<tr><td><code>$98BE</code></td><td>code</td><td><a href="https://taotao54321.github.io/StarSoldierResource/enemy-shot/#rank">敵弾の発射間隔</a>を元に敵弾発射をキャンセル(呼び出し元から <code>rts</code>)するルーチン</td></tr>
+<tr><td><code>$98CA</code></td><td>code</td><td>レーザー発射処理ルーチン</td></tr>
+<tr><td><code>$98E6</code></td><td>code</td><td>自弾とオブジェクト/地形との衝突判定/処理ルーチン</td></tr>
+<tr><td><code>$998F</code></td><td>code</td><td>自弾と地形との衝突判定/処理</td></tr>
+<tr><td><code>$9A02</code></td><td>data</td><td>地形セルへの撃ち込みを処理するルーチンのテーブル (引数: <code>A</code>:セルID, <code>$00</code>:列, <code>$01</code>:行, <code>$02</code>:地形セルへのポインタ)</td></tr>
+<tr><td><code>$9A5A</code></td><td>code</td><td><a href="https://taotao54321.github.io/StarSoldierResource/ground-format/#cell-id">列依存特殊セル</a> 初期状態への撃ち込み処理ルーチン</td></tr>
+<tr><td><code>$9A5E</code></td><td>code</td><td>2x2セル 右上への撃ち込み処理ルーチン (左上に当たったものとして処理するだけ)</td></tr>
+<tr><td><code>$9A63</code></td><td>code</td><td>2x2セル 左下への撃ち込み処理ルーチン (左上に当たったものとして処理するだけ)</td></tr>
+<tr><td><code>$9A68</code></td><td>code</td><td>2x2セル 右下への撃ち込み処理ルーチン (左上に当たったものとして処理するだけ)</td></tr>
+<tr><td><code>$9A6D</code></td><td>code</td><td>野沢プログラマー 初期状態への撃ち込み処理ルーチン</td></tr>
+<tr><td><code>$9A78</code></td><td>code</td><td>1UP 初期状態への撃ち込み処理ルーチン</td></tr>
+<tr><td><code>$9A85</code></td><td>code</td><td>ワープ 初期状態への撃ち込み処理ルーチン</td></tr>
+<tr><td><code>$9A92</code></td><td>code</td><td>トルード 初期状態 (ID:0x19) への撃ち込み処理ルーチン</td></tr>
+<tr><td><code>$9A96</code></td><td>code</td><td>トルード 初期状態 (ID:0x1A) への撃ち込み処理ルーチン</td></tr>
+<tr><td><code>$9A9A</code></td><td>code</td><td>トルード 初期状態 (ID:0x1B) への撃ち込み処理ルーチン</td></tr>
+<tr><td><code>$9A9E</code></td><td>code</td><td>トルード 初期状態 (ID:0x1C) への撃ち込み処理ルーチン</td></tr>
+<tr><td><code>$9AA2</code></td><td>code</td><td>デライラ 初期状態 左上への撃ち込み処理ルーチン</td></tr>
+<tr><td><code>$9AA6</code></td><td>code</td><td>ゼグ 初期状態への撃ち込み処理ルーチン</td></tr>
+<tr><td><code>$9AAD</code></td><td>code</td><td>2x2地上ザコ (300点) 左上への撃ち込み処理ルーチン</td></tr>
+<tr><td><code>$9AB1</code></td><td>code</td><td>2x2地上ザコ (200点) 左上への撃ち込み処理ルーチン</td></tr>
+<tr><td><code>$9ABF</code></td><td>code</td><td>地上ザコ (100点) への撃ち込み処理ルーチン</td></tr>
+<tr><td><code>$9ACE</code></td><td>code</td><td>パワーアップ箱への撃ち込み処理ルーチン</td></tr>
+<tr><td><code>$9AEE</code></td><td>code</td><td>デライラ 撃ち込み中状態への撃ち込み処理ルーチン</td></tr>
+<tr><td><code>$9B32</code></td><td>code</td><td>トルード 撃ち込み中状態への撃ち込み処理ルーチン</td></tr>
+<tr><td><code>$9B5D</code></td><td>code</td><td>1UP 撃ち込み中状態への撃ち込み処理ルーチン</td></tr>
+<tr><td><code>$9B72</code></td><td>code</td><td>ワープ 撃ち込み中状態への撃ち込み処理ルーチン</td></tr>
+<tr><td><code>$9B83</code></td><td>code</td><td>野沢プログラマー 撃ち込み中状態への撃ち込み処理ルーチン</td></tr>
+<tr><td><code>$9BB4</code></td><td>code</td><td><a href="https://taotao54321.github.io/StarSoldierResource/ground-format/#cell-id">列依存特殊セル</a> 撃ち込み中状態への撃ち込み処理ルーチン</td></tr>
+<tr><td><code>$9BC0</code></td><td>code</td><td>レーザー 撃ち込み中状態への撃ち込み処理</td></tr>
+<tr><td><code>$9BC8</code></td><td>code</td><td>黄金の指 撃ち込み中状態への撃ち込み処理</td></tr>
+<tr><td><code>$9BD4</code></td><td>code</td><td>ミロン 撃ち込み中状態への撃ち込み処理</td></tr>
+<tr><td><code>$9BDC</code></td><td>code</td><td>クジラ 撃ち込み中状態への撃ち込み処理</td></tr>
+<tr><td><code>$9C1B</code></td><td>code</td><td>ゼグ 撃ち込み中状態への撃ち込み処理ルーチン</td></tr>
+<tr><td><code>$9C58</code></td><td>data</td><td>ゼグの (スコア,通知) テーブル</td></tr>
+<tr><td><code>$9C74</code></td><td>code</td><td>地形外観変更要求を出すルーチン</td></tr>
+<tr><td><code>$9CBD</code></td><td>code</td><td>通常サイズの地上物の破壊処理ルーチン</td></tr>
+<tr><td><code>$9D0B</code></td><td>code</td><td>2x2サイズの地上物の破壊処理ルーチン</td></tr>
+<tr><td><code>$9D93</code></td><td>code</td><td>地上物の大爆発オブジェクト初期化ルーチン</td></tr>
+<tr><td><code>$9DA6</code></td><td>code</td><td>地上物の爆発オブジェクトを格納すべきインデックスを返すルーチン</td></tr>
+<tr><td><code>$9DB8</code></td><td>code</td><td>2x2サイズの地形セル全体を外観変更中にするルーチン</td></tr>
+<tr><td><code>$9DCD</code></td><td>code</td><td>敵を全滅させるルーチン</td></tr>
+<tr><td><code>$9E29</code></td><td>data</td><td>オブジェクトのパーツ番号に対応する爆発オブジェクトの (メタスプライトID,オブジェクトID)</td></tr>
+<tr><td><code>$9E33</code></td><td>data</td><td>現在の地形 (<code>$06CA-$07F5</code>) 内の各行へのポインタ</td></tr>
+<tr><td><code>$9E51</code></td><td>code</td><td>自機とオブジェクト/敵弾との衝突判定/処理ルーチン</td></tr>
+<tr><td><code>$9EDE</code></td><td>code</td><td>自機バリアにダメージを与えるルーチン</td></tr>
+<tr><td><code>$9EFD</code></td><td>code</td><td>パワーアップアイテム取得処理</td></tr>
+<tr><td><code>$9F28</code></td><td>code</td><td>自機とスターブレインとの衝突判定/処理</td></tr>
+<tr><td><code>$9F7D</code></td><td>code</td><td>NMI ルーチン</td></tr>
+<tr><td><code>$A103</code></td><td>data</td><td>デモプレイ中の方向キー入力候補</td></tr>
+<tr><td><code>$A10B</code></td><td>code</td><td><code>jmp ($0008)</code> と等価</td></tr>
+<tr><td><code>$A10E</code></td><td>data</td><td>NMI 地形タスクテーブル (16F 中の個々のフレームで実行される)</td></tr>
+<tr><td><code>$A12E</code></td><td>data</td><td>PPU スクロールy に対応する行の PPU アドレスのテーブル</td></tr>
+<tr><td><code>$A14C</code></td><td>data</td><td>BG 内の 32x32 metatile 内の位置に対応する属性テーブル値マスク (左上, 右上, 左下, 右下)</td></tr>
+<tr><td><code>$A150</code></td><td>data</td><td>BGパレットインデックスに対応する属性テーブル値 (32x32 metatile 中の 4 タイル全て同じパレットになる)</td></tr>
+<tr><td><code>$A154</code></td><td>code</td><td>地形のパレットアニメーションルーチン (NMI から 16F に2回呼ばれる)</td></tr>
+<tr><td><code>$A1A2</code></td><td>code</td><td>地形外観変更ルーチン (NMI から 16F に 7回呼ばれる)</td></tr>
+<tr><td><code>$A1AF</code></td><td>code</td><td>地形外観変更要求を処理するルーチン</td></tr>
+<tr><td><code>$A1E0</code></td><td>code</td><td>地形外観変更 2x2破壊痕</td></tr>
+<tr><td><code>$A1EC</code></td><td>code</td><td>地形外観変更 <a href="https://taotao54321.github.io/StarSoldierResource/ground-format/#cell-id">列依存特殊セル</a></td></tr>
+<tr><td><code>$A1FA</code></td><td>code</td><td>地形外観変更 破壊痕</td></tr>
+<tr><td><code>$A205</code></td><td>code</td><td>地形外観変更 野沢プログラマー</td></tr>
+<tr><td><code>$A210</code></td><td>code</td><td>地形外観変更 裏パワー</td></tr>
+<tr><td><code>$A21B</code></td><td>code</td><td>地形外観変更 1UP</td></tr>
+<tr><td><code>$A226</code></td><td>code</td><td>地形外観変更 ワープ</td></tr>
+<tr><td><code>$A231</code></td><td>code</td><td>地形外観変更 トルード1</td></tr>
+<tr><td><code>$A23C</code></td><td>code</td><td>地形外観変更 トルード2</td></tr>
+<tr><td><code>$A247</code></td><td>code</td><td>地形外観変更 トルード3</td></tr>
+<tr><td><code>$A252</code></td><td>code</td><td>地形外観変更 ゼグ</td></tr>
+<tr><td><code>$A25D</code></td><td>code</td><td>地形外観変更 デライラ1</td></tr>
+<tr><td><code>$A26A</code></td><td>code</td><td>地形外観変更 デライラ2</td></tr>
+<tr><td><code>$A277</code></td><td>code</td><td>地形外観変更 デライラ3</td></tr>
+<tr><td><code>$A284</code></td><td>code</td><td>地形外観変更 デライラ4</td></tr>
+<tr><td><code>$A291</code></td><td>code</td><td>地形外観変更 デライラ5</td></tr>
+<tr><td><code>$A29E</code></td><td>data</td><td>地形外観変更ルーチンテーブル (引数: <code>$08</code>:列, <code>$09</code>:行, <code>$0F</code>:<a href="https://taotao54321.github.io/StarSoldierResource/ram-map/#addr-0200">PPUデータ転送キュー</a>内オフセット)</td></tr>
+<tr><td><code>$A2BE</code></td><td>code</td><td><a href="https://taotao54321.github.io/StarSoldierResource/ram-map/#addr-068A">地形外観変更要求リングバッファ</a>の head を1要素分進める</td></tr>
+<tr><td><code>$A2D1</code></td><td>code</td><td>地形外観を指定したIDに書き換えるための処理を行うルーチン (属性テーブル変更あり)</td></tr>
+<tr><td><code>$A370</code></td><td>code</td><td>地形外観を指定したIDに書き換えるための処理を行うルーチン (属性テーブル変更なし)</td></tr>
+<tr><td><code>$A3F8</code></td><td>code</td><td>デライラ1パーツの地形外観書き換え処理ルーチン</td></tr>
+<tr><td><code>$A480</code></td><td>code</td><td>2x2地形外観書き換え処理ルーチン</td></tr>
+<tr><td><code>$A49F</code></td><td>code</td><td>デライラ地形外観書き換え処理ルーチン</td></tr>
+<tr><td><code>$A4BE</code></td><td>code</td><td>(未使用。地形外観書き換え関連)</td></tr>
+<tr><td><code>$A4DD</code></td><td>code</td><td>現在の地形の先頭行の属性テーブルを PPU へ非同期転送するルーチン (NMI から 16F に1回呼ばれる)</td></tr>
+<tr><td><code>$A5DC</code></td><td>code</td><td>現在の地形の先頭行のBGデータ下半分を PPU へ非同期転送するルーチン (NMI から 16F に1回呼ばれる)</td></tr>
+<tr><td><code>$A68D</code></td><td>code</td><td>現在の地形の先頭行のBGデータ上半分を PPU へ非同期転送するルーチン (NMI から 16F に1回呼ばれる)</td></tr>
+<tr><td><code>$A73B</code></td><td>code</td><td>現在の地形を1行シフトするルーチン (NMI から 16F に1回呼ばれる)</td></tr>
+<tr><td><code>$A75C</code></td><td>code</td><td>現在の地形の先頭行をロードするルーチン (NMI から 16F に1回呼ばれる)</td></tr>
+<tr><td><code>$A78D</code></td><td>code</td><td>進行度管理および面の地形の前半/後半切り替えルーチン (NMI から 16F に1回呼ばれる)</td></tr>
+<tr><td><code>$A7E6</code></td><td>code</td><td>現在の面の地形の後半のデータをロードするルーチン</td></tr>
+<tr><td><code>$A7F2</code></td><td>code</td><td>現在の面の地形の前半のデータをロードするルーチン</td></tr>
+<tr><td><code>$A7FC</code></td><td>code</td><td>現在の<a href="https://taotao54321.github.io/StarSoldierResource/ground-format/#setting">地形設定</a>を適用するルーチン</td></tr>
+<tr><td><code>$A83C</code></td><td>code</td><td>PPU へパレットを非同期に転送するルーチン</td></tr>
+<tr><td><code>$A86A</code></td><td>code</td><td>地形の<a href="https://taotao54321.github.io/StarSoldierResource/ground-format/#special-cell">特殊セル</a>をロードするルーチン (NMI から 16F に1回呼ばれる)</td></tr>
+<tr><td><code>$A897</code></td><td>code</td><td>地形の<a href="https://taotao54321.github.io/StarSoldierResource/ground-format/#compression">圧縮データ</a>を展開し、現在の地形の先頭行を更新するルーチン</td></tr>
+<tr><td><code>$A93F</code></td><td>code</td><td>スコア表示スプライト書き込みルーチン</td></tr>
+<tr><td><code>$A98A</code></td><td>code</td><td>自機スプライト書き込みルーチン</td></tr>
+<tr><td><code>$AA26</code></td><td>code</td><td>バリアスプライト書き込みルーチン</td></tr>
+<tr><td><code>$AA3A</code></td><td>data</td><td>バリア位置テーブル (自機に対する相対座標 (dx,dy))</td></tr>
+<tr><td><code>$AA4A</code></td><td>code</td><td>メタスプライト書き込みルーチン</td></tr>
+<tr><td><code>$AAB6</code></td><td>code</td><td>単一スプライト書き込みルーチン</td></tr>
+<tr><td><code>$AAC8</code></td><td>code</td><td>星スプライト書き込みルーチン</td></tr>
+<tr><td><code>$AB1C</code></td><td>code</td><td>星を動かすルーチン</td></tr>
+<tr><td><code>$AB57</code></td><td>code</td><td>面/残機表示スプライト書き込みルーチン</td></tr>
+<tr><td><code>$ABA3</code></td><td>code</td><td>自弾スプライト書き込みルーチン</td></tr>
+<tr><td><code>$ABD9</code></td><td>code</td><td>敵弾スプライト書き込みルーチン (最大4つまで同時表示)</td></tr>
+<tr><td><code>$AC23</code></td><td>code</td><td>オブジェクトスプライト書き込みルーチン</td></tr>
+<tr><td><code>$AC65</code></td><td>code</td><td>通知タイマーをデクリメントし、0 でなければ通知を表示するルーチン</td></tr>
+<tr><td><code>$AC6A</code></td><td>code</td><td>通知表示ルーチン</td></tr>
+<tr><td><code>$AD5E</code></td><td>data</td><td>ボーナス通知表示用データへのポインタテーブル</td></tr>
+<tr><td><code>$AD6E</code></td><td>data</td><td>ボーナス通知 &quot;2000000&quot; 表示用データ</td></tr>
+<tr><td><code>$AD77</code></td><td>data</td><td>ボーナス通知 &quot;80000&quot; 表示用データ</td></tr>
+<tr><td><code>$AD7E</code></td><td>data</td><td>ボーナス通知 &quot;40000&quot; 表示用データ</td></tr>
+<tr><td><code>$AD85</code></td><td>data</td><td>ボーナス通知 &quot;10000&quot; 表示用データ</td></tr>
+<tr><td><code>$AD8C</code></td><td>data</td><td>ボーナス通知 &quot;4000&quot; 表示用データ</td></tr>
+<tr><td><code>$AD92</code></td><td>data</td><td>ボーナス通知 &quot;1000&quot; 表示用データ</td></tr>
+<tr><td><code>$AD98</code></td><td>data</td><td>ボーナス通知 &quot;500&quot; 表示用データ</td></tr>
+<tr><td><code>$AD9D</code></td><td>data</td><td>通知表示用データへのポインタテーブル</td></tr>
+<tr><td><code>$ADAF</code></td><td>data</td><td>通知 &quot;STAGE ?? START&quot; 表示用データ</td></tr>
+<tr><td><code>$ADC2</code></td><td>data</td><td>通知 &quot;PAUSE&quot; 表示用データ</td></tr>
+<tr><td><code>$ADCA</code></td><td>data</td><td>通知 &quot;GAME OVER&quot; 表示用データ</td></tr>
+<tr><td><code>$ADD8</code></td><td>data</td><td>通知 &quot;ATTACK STAR BRAIN&quot; 表示用データ</td></tr>
+<tr><td><code>$ADF0</code></td><td>data</td><td>通知 &quot;ATTACK BIG STAR BRAIN&quot; 表示用データ</td></tr>
+<tr><td><code>$AE0C</code></td><td>data</td><td>通知 &quot;BONUS ???????&quot; 表示用データ</td></tr>
+<tr><td><code>$AE17</code></td><td>data</td><td>通知 &quot;BRAIN ESCAPED&quot; 表示用データ</td></tr>
+<tr><td><code>$AE29</code></td><td>data</td><td>通知 &quot;WARP NEXT STAGE&quot; 表示用データ</td></tr>
+<tr><td><code>$AE3F</code></td><td>data</td><td>通知 &quot;COMPLETE WARP&quot; 表示用データ</td></tr>
+<tr><td><code>$AE51</code></td><td>data</td><td>デライラのパーツごとの地形外観に対応する CHR タイルたち</td></tr>
+<tr><td><code>$AEA1</code></td><td>code</td><td>次の VBLANK を待つルーチン</td></tr>
+<tr><td><code>$AEAC</code></td><td>code</td><td>全スプライトを非表示にするルーチン</td></tr>
+<tr><td><code>$AEB7</code></td><td>code</td><td>VRAM 全体をゼロクリアするルーチン</td></tr>
+<tr><td><code>$AEDA</code></td><td>code</td><td>PPU 描画無効化ルーチン (NMI の発生には影響しない)</td></tr>
+<tr><td><code>$AEF0</code></td><td>code</td><td>PPU 描画有効化ルーチン (全スプライト非表示/PPUスクロール再設定も行う)</td></tr>
+<tr><td><code>$AF1D</code></td><td>code</td><td>PPU へのパレット転送ルーチン (描画が有効なら非同期、無効なら同期)</td></tr>
+<tr><td><code>$AF6C</code></td><td>code</td><td>PPU への<a href="https://taotao54321.github.io/StarSoldierResource/ram-map/#addr-0200">データ転送キュー</a>が空になるか、もしくは描画無効になるまで待つルーチン</td></tr>
+<tr><td><code>$AF76</code></td><td>code</td><td>ポーズ処理ルーチン</td></tr>
+<tr><td><code>$AFF4</code></td><td>code</td><td>次の NMI の完了を待つルーチン</td></tr>
+<tr><td><a href="https://taotao54321.github.io/StarSoldierResource/prg-map/#addr-AFFB"><code>$AFFB</code></a></td><td>code</td><td>ランレングス圧縮BGデータを PPU へ同期的に転送するルーチン</td></tr>
+<tr><td><code>$B03F</code></td><td>code</td><td>パレット初期化ルーチン</td></tr>
+<tr><td><code>$B050</code></td><td>code</td><td><a href="https://taotao54321.github.io/StarSoldierResource/collision/#shot-vs-body">弾vs物の衝突判定</a>ルーチン</td></tr>
+<tr><td><code>$B067</code></td><td>code</td><td><a href="https://taotao54321.github.io/StarSoldierResource/collision/#hero-vs-object">自機vsオブジェクトの衝突判定</a>ルーチン</td></tr>
+<tr><td><code>$B07E</code></td><td>data</td><td>敵IDごとのスコアテーブル (bit0-3:最上位桁の数字, bit4-7:<code>8-(桁数)</code>)</td></tr>
+<tr><td><code>$B0A1</code></td><td>code</td><td>指定された敵に対応するスコアを加算するルーチン (デモ中は何もしない)</td></tr>
+<tr><td><code>$B0C4</code></td><td>code</td><td>指定されたスコアを加算するルーチン (引数 <code>A</code>: bit0-3:最上位桁の数字, bit4-7:<code>8-(桁数)</code>) (デモ中は何もしない)</td></tr>
+<tr><td><code>$B0E1</code></td><td>code</td><td>スコア加算下請けルーチン</td></tr>
+<tr><td><code>$B105</code></td><td>code</td><td>エクステンド/ハイスコア更新処理ルーチン</td></tr>
+<tr><td><code>$B143</code></td><td>data</td><td>初期パレット</td></tr>
+<tr><td><code>$B153</code></td><td>data</td><td>エクステンドスコアテーブル (上位4桁)</td></tr>
+<tr><td><code>$B15F</code></td><td>code</td><td>パレットアニメーションルーチン</td></tr>
+<tr><td><code>$B1B5</code></td><td>code</td><td>パレットアニメーションパラメータ/スターブレイン移動パラメータ初期化ルーチン</td></tr>
+<tr><td><code>$B1DC</code></td><td>data</td><td>パレットアニメーションにおける各パレットの変更間隔</td></tr>
+<tr><td><code>$B1E0</code></td><td>code</td><td>フェードアウト演出ルーチン</td></tr>
+<tr><td><code>$B229</code></td><td>code</td><td>スターブレインのBGを1行消すことを試みるルーチン</td></tr>
+<tr><td><code>$B23C</code></td><td>code</td><td>スターブレインのBGを1行消すルーチン</td></tr>
+<tr><td><code>$B290</code></td><td>data</td><td>スターブレインBG消去用 PPU アドレステーブル</td></tr>
+<tr><td><code>$B2D0</code></td><td>code</td><td>タイトルシーン</td></tr>
+<tr><td><code>$B38E</code></td><td>code</td><td>タイトルシーン 裏技成立判定/処理</td></tr>
+<tr><td><code>$B3C1</code></td><td>code</td><td>タイトルシーンでの Select 入力を検出/カウントするルーチン</td></tr>
+<tr><td><code>$B3D0</code></td><td>data</td><td>タイトル画面 <a href="https://taotao54321.github.io/StarSoldierResource/prg-map/#addr-AFFB">ランレングス圧縮BGデータ</a></td></tr>
+<tr><td><code>$B656</code></td><td>data</td><td>タイトル画面 パレット</td></tr>
+<tr><td><code>$B666</code></td><td>code</td><td>BGMを終了するルーチン</td></tr>
+<tr><td><code>$B66B</code></td><td>code</td><td>BGMを中断するルーチン</td></tr>
+<tr><td><code>$B690</code></td><td>code</td><td>BGM再生ルーチン (NMI から呼ばれる)</td></tr>
+<tr><td><code>$B6EC</code></td><td>code</td><td>BGM トラックデータを読み込んで処理するルーチン</td></tr>
+<tr><td><code>$B6FE</code></td><td>code</td><td>BGM トラックデータ <code>0xFC..=0xFF</code> (制御用) の処理</td></tr>
+<tr><td><code>$B70E</code></td><td>data</td><td>BGM トラックデータ <code>0xFF</code>, <code>0xFE</code>, <code>0xFD</code>, <code>0xFC</code> に対応するルーチンテーブル (RTS trick 用)</td></tr>
+<tr><td><code>$B716</code></td><td>data</td><td>BGM 各曲に対応する <code>$4000</code>, <code>$4004</code> 設定値</td></tr>
+<tr><td><code>$B71F</code></td><td>code</td><td>BGM トラックデータ <code>0x80..=0xEF</code> (音長設定) の処理</td></tr>
+<tr><td><code>$B740</code></td><td>code</td><td>BGM トラックデータ <code>0</code>, <code>25..=0x7F</code> (発音/消音) の処理</td></tr>
+<tr><td><code>$B77C</code></td><td>code</td><td>BGM 周波数タイマー値 0 を返すルーチン</td></tr>
+<tr><td><code>$B781</code></td><td>code</td><td>BGM 周波数タイマー値計算ルーチン</td></tr>
+<tr><td><code>$B7AE</code></td><td>code</td><td>BGM トラックデータ <code>0xFF</code> (BGM終了) の処理</td></tr>
+<tr><td><code>$B7B1</code></td><td>code</td><td>BGM トラックデータ <code>0xFE</code> (BGM先頭に戻る) の処理</td></tr>
+<tr><td><code>$B7BE</code></td><td>code</td><td>BGM トラックデータポインタ初期化ルーチン</td></tr>
+<tr><td><code>$B7D3</code></td><td>code</td><td>BGM トラックデータ <code>0xFD</code> (BGMループ開始) の処理</td></tr>
+<tr><td><code>$B7E8</code></td><td>code</td><td>BGM トラックデータ <code>0xFE</code> (BGMループ末尾) の処理</td></tr>
+<tr><td><code>$B7FC</code></td><td>code</td><td>BGM トラックデータ読み込みルーチン</td></tr>
+<tr><td><code>$B809</code></td><td>code</td><td>APU 初期化 (呼び出すと全チャンネル消音)</td></tr>
+<tr><td><code>$B82A</code></td><td>code</td><td>効果音再生ルーチン (NMI から呼ばれる)</td></tr>
+<tr><td><code>$B86C</code></td><td>data</td><td>各効果音に対応する (初期化ルーチン,更新ルーチン) のテーブル</td></tr>
+<tr><td><code>$B8A0</code></td><td>code</td><td>効果音 自機バリアダメージ (ID:1) 初期化ルーチン</td></tr>
+<tr><td><code>$B8B6</code></td><td>code</td><td>効果音の更新を終了するルーチン</td></tr>
+<tr><td><code>$B8BB</code></td><td>code</td><td>効果音 敵ダメージ (ID:2) 初期化ルーチン</td></tr>
+<tr><td><code>$B8C1</code></td><td>code</td><td>効果音 敵ダメージ (ID:2) 更新ルーチン</td></tr>
+<tr><td><code>$B8E6</code></td><td>code</td><td>効果音 ポーズ (ID:3) 初期化ルーチン</td></tr>
+<tr><td><code>$B8EC</code></td><td>code</td><td>効果音 ポーズ (ID:3) 更新ルーチン</td></tr>
+<tr><td><code>$B925</code></td><td>code</td><td>効果音 自機/スターブレイン/地上物の爆発 (ID:4) 初期化ルーチン</td></tr>
+<tr><td><code>$B937</code></td><td>code</td><td>効果音 自機/スターブレイン/地上物の爆発 (ID:4) 更新ルーチン</td></tr>
+<tr><td><code>$B94D</code></td><td>code</td><td>効果音 空中物の爆発 (ID:5) 初期化ルーチン</td></tr>
+<tr><td><code>$B95B</code></td><td>code</td><td>効果音 空中物の爆発 (ID:5) 更新ルーチン</td></tr>
+<tr><td><code>$B96E</code></td><td>code</td><td>効果音 エクステンド (ID:6) 初期化ルーチン</td></tr>
+<tr><td><code>$B986</code></td><td>code</td><td>効果音 エクステンド (ID:6) 更新ルーチン</td></tr>
+<tr><td><code>$B9BA</code></td><td>data</td><td>効果音 エクステンド (ID:6) 各音符の周波数タイマー値</td></tr>
+<tr><td><code>$B9C2</code></td><td>code</td><td>効果音 自弾発射 (ID:7) 初期化ルーチン</td></tr>
+<tr><td><code>$B9DD</code></td><td>code</td><td>効果音 未使用 (ID:8) 初期化ルーチン</td></tr>
+<tr><td><code>$B9FB</code></td><td>code</td><td>効果音 未使用 (ID:8) 更新ルーチン</td></tr>
+<tr><td><code>$BA10</code></td><td>code</td><td>効果音 ラザロ合体 (ID:9) 初期化ルーチン</td></tr>
+<tr><td><code>$BA38</code></td><td>code</td><td>効果音 ワープ (ID:10) 初期化ルーチン</td></tr>
+<tr><td><code>$BA5E</code></td><td>code</td><td>効果音 ワープ (ID:10) 更新ルーチン</td></tr>
+<tr><td><code>$BA74</code></td><td>code</td><td>効果音 パワーアップ (ID:11) 初期化ルーチン</td></tr>
+<tr><td><code>$BA89</code></td><td>code</td><td>効果音 パワーアップ (ID:11) 更新ルーチン</td></tr>
+<tr><td><code>$BAA8</code></td><td>code</td><td>効果音 ボーナス (ID:12) 初期化ルーチン</td></tr>
+<tr><td><code>$BAC0</code></td><td>code</td><td>効果音 ボーナス (ID:12) 更新ルーチン</td></tr>
+<tr><td><code>$BAF0</code></td><td>code</td><td>効果音 ボーナス (ID:12) 各音符の周波数タイマー値</td></tr>
+<tr><td><code>$BAF8</code></td><td>code</td><td>バンク切り替え動作テストルーチン (CHR #0, #1 内の magic 文字列を比較し、一致しないことを確認)</td></tr>
+<tr><td><code>$BB29</code></td><td>code</td><td>指定した CHR バンクからの magic 文字列読み取りを開始(空読みまで行う)</td></tr>
+<tr><td><code>$BB3E</code></td><td>data</td><td>地形の<a href="https://taotao54321.github.io/StarSoldierResource/ground-format/#special-cell">特殊セルデータ</a> 1面</td></tr>
+<tr><td><code>$BB43</code></td><td>data</td><td>地形の<a href="https://taotao54321.github.io/StarSoldierResource/ground-format/#special-cell">特殊セルデータ</a> 2面</td></tr>
+<tr><td><code>$BB48</code></td><td>data</td><td>地形の<a href="https://taotao54321.github.io/StarSoldierResource/ground-format/#special-cell">特殊セルデータ</a> 3面</td></tr>
+<tr><td><code>$BB4F</code></td><td>data</td><td>地形の<a href="https://taotao54321.github.io/StarSoldierResource/ground-format/#special-cell">特殊セルデータ</a> 4面</td></tr>
+<tr><td><code>$BB56</code></td><td>data</td><td>地形の<a href="https://taotao54321.github.io/StarSoldierResource/ground-format/#special-cell">特殊セルデータ</a> 5面</td></tr>
+<tr><td><code>$BB5B</code></td><td>data</td><td>地形の<a href="https://taotao54321.github.io/StarSoldierResource/ground-format/#special-cell">特殊セルデータ</a> 6面</td></tr>
+<tr><td><code>$BB5E</code></td><td>data</td><td>地形の<a href="https://taotao54321.github.io/StarSoldierResource/ground-format/#special-cell">特殊セルデータ</a> 7面</td></tr>
+<tr><td><code>$BB63</code></td><td>data</td><td>地形の<a href="https://taotao54321.github.io/StarSoldierResource/ground-format/#special-cell">特殊セルデータ</a> 8面</td></tr>
+<tr><td><code>$BB68</code></td><td>data</td><td>地形の<a href="https://taotao54321.github.io/StarSoldierResource/ground-format/#special-cell">特殊セルデータ</a> 9面</td></tr>
+<tr><td><code>$BB6D</code></td><td>data</td><td>地形の<a href="https://taotao54321.github.io/StarSoldierResource/ground-format/#special-cell">特殊セルデータ</a> 10面</td></tr>
+<tr><td><code>$BB72</code></td><td>data</td><td>地形の<a href="https://taotao54321.github.io/StarSoldierResource/ground-format/#special-cell">特殊セルデータ</a> 11面</td></tr>
+<tr><td><code>$BB77</code></td><td>data</td><td>地形の<a href="https://taotao54321.github.io/StarSoldierResource/ground-format/#special-cell">特殊セルデータ</a> 12面</td></tr>
+<tr><td><code>$BB7A</code></td><td>data</td><td>地形の<a href="https://taotao54321.github.io/StarSoldierResource/ground-format/#special-cell">特殊セルデータ</a> 13面</td></tr>
+<tr><td><code>$BB7F</code></td><td>data</td><td>地形の<a href="https://taotao54321.github.io/StarSoldierResource/ground-format/#special-cell">特殊セルデータ</a> 14面</td></tr>
+<tr><td><code>$BB84</code></td><td>data</td><td>地形の<a href="https://taotao54321.github.io/StarSoldierResource/ground-format/#special-cell">特殊セルデータ</a> 15面</td></tr>
+<tr><td><code>$BB87</code></td><td>data</td><td>地形の<a href="https://taotao54321.github.io/StarSoldierResource/ground-format/#special-cell">特殊セルデータ</a> 16面</td></tr>
+<tr><td><code>$BB8C</code></td><td>data</td><td>BGM 各音階(矩形波 C2 から B2 まで)に対応する周波数タイマー値</td></tr>
+<tr><td><code>$BBA6</code></td><td>data</td><td>各BGMに対応する<a href="https://taotao54321.github.io/StarSoldierResource/music/#track-data">トラックデータ</a>)(矩形波1, 矩形波2, 三角波)へのポインタ</td></tr>
+<tr><td><code>$BBE2</code></td><td>data</td><td>BGM <a href="https://taotao54321.github.io/StarSoldierResource/music/#track-data">トラックデータ</a> タイトル画面 矩形波1</td></tr>
+<tr><td><code>$BC1B</code></td><td>data</td><td>BGM <a href="https://taotao54321.github.io/StarSoldierResource/music/#track-data">トラックデータ</a> タイトル画面 矩形波2</td></tr>
+<tr><td><code>$BC45</code></td><td>data</td><td>BGM <a href="https://taotao54321.github.io/StarSoldierResource/music/#track-data">トラックデータ</a> タイトル画面 三角波</td></tr>
+<tr><td><code>$BC61</code></td><td>data</td><td>BGM <a href="https://taotao54321.github.io/StarSoldierResource/music/#track-data">トラックデータ</a> ラザロ戦 矩形波1</td></tr>
+<tr><td><code>$BC76</code></td><td>data</td><td>BGM <a href="https://taotao54321.github.io/StarSoldierResource/music/#track-data">トラックデータ</a> ラザロ戦 矩形波2/三角波</td></tr>
+<tr><td><code>$BCAE</code></td><td>data</td><td>BGM <a href="https://taotao54321.github.io/StarSoldierResource/music/#track-data">トラックデータ</a> スターブレイン撃破 矩形波1</td></tr>
+<tr><td><code>$BCDB</code></td><td>data</td><td>BGM <a href="https://taotao54321.github.io/StarSoldierResource/music/#track-data">トラックデータ</a> スターブレイン撃破 矩形波2</td></tr>
+<tr><td><code>$BD0C</code></td><td>data</td><td>BGM <a href="https://taotao54321.github.io/StarSoldierResource/music/#track-data">トラックデータ</a> スターブレイン撃破 三角波</td></tr>
+<tr><td><code>$BD31</code></td><td>data</td><td>BGM <a href="https://taotao54321.github.io/StarSoldierResource/music/#track-data">トラックデータ</a> ゲーム終了 矩形波1</td></tr>
+<tr><td><code>$BD76</code></td><td>data</td><td>BGM <a href="https://taotao54321.github.io/StarSoldierResource/music/#track-data">トラックデータ</a> ゲーム終了 矩形波2</td></tr>
+<tr><td><code>$BDAB</code></td><td>data</td><td>BGM <a href="https://taotao54321.github.io/StarSoldierResource/music/#track-data">トラックデータ</a> ゲーム終了 三角波</td></tr>
+<tr><td><code>$BDD3</code></td><td>data</td><td>BGM <a href="https://taotao54321.github.io/StarSoldierResource/music/#track-data">トラックデータ</a> スターブレイン戦 矩形波1</td></tr>
+<tr><td><code>$BE07</code></td><td>data</td><td>BGM <a href="https://taotao54321.github.io/StarSoldierResource/music/#track-data">トラックデータ</a> スターブレイン戦 矩形波2</td></tr>
+<tr><td><code>$BE3B</code></td><td>data</td><td>BGM <a href="https://taotao54321.github.io/StarSoldierResource/music/#track-data">トラックデータ</a> スターブレイン戦 三角波</td></tr>
+<tr><td><code>$BE79</code></td><td>data</td><td>BGM <a href="https://taotao54321.github.io/StarSoldierResource/music/#track-data">トラックデータ</a> 面イントロ (フルパワー未満) 矩形波1</td></tr>
+<tr><td><code>$BE92</code></td><td>data</td><td>BGM <a href="https://taotao54321.github.io/StarSoldierResource/music/#track-data">トラックデータ</a> 面イントロ (フルパワー未満) 矩形波2</td></tr>
+<tr><td><code>$BEC3</code></td><td>data</td><td>BGM <a href="https://taotao54321.github.io/StarSoldierResource/music/#track-data">トラックデータ</a> 面イントロ (フルパワー未満) 三角波</td></tr>
+<tr><td><code>$BEF5</code></td><td>data</td><td>BGM <a href="https://taotao54321.github.io/StarSoldierResource/music/#track-data">トラックデータ</a> 無音 矩形波1/矩形波2/三角波</td></tr>
+<tr><td><code>$BEF8</code></td><td>data</td><td>BGM <a href="https://taotao54321.github.io/StarSoldierResource/music/#track-data">トラックデータ</a> 面ループ (フルパワー未満) 矩形波1</td></tr>
+<tr><td><code>$BFAB</code></td><td>data</td><td>BGM <a href="https://taotao54321.github.io/StarSoldierResource/music/#track-data">トラックデータ</a> 面ループ (フルパワー未満) 矩形波2</td></tr>
+<tr><td><code>$C02D</code></td><td>data</td><td>BGM <a href="https://taotao54321.github.io/StarSoldierResource/music/#track-data">トラックデータ</a> 面ループ (フルパワー未満) 三角波</td></tr>
+<tr><td><code>$C0EB</code></td><td>data</td><td>BGM <a href="https://taotao54321.github.io/StarSoldierResource/music/#track-data">トラックデータ</a> 面イントロ (フルパワー) 矩形波1</td></tr>
+<tr><td><code>$C10A</code></td><td>data</td><td>BGM <a href="https://taotao54321.github.io/StarSoldierResource/music/#track-data">トラックデータ</a> 面イントロ (フルパワー) 矩形波2</td></tr>
+<tr><td><code>$C128</code></td><td>data</td><td>BGM <a href="https://taotao54321.github.io/StarSoldierResource/music/#track-data">トラックデータ</a> 面イントロ (フルパワー) 三角波</td></tr>
+<tr><td><code>$C141</code></td><td>data</td><td>BGM <a href="https://taotao54321.github.io/StarSoldierResource/music/#track-data">トラックデータ</a> 面ループ (フルパワー) 矩形波1</td></tr>
+<tr><td><code>$C1FE</code></td><td>data</td><td>BGM <a href="https://taotao54321.github.io/StarSoldierResource/music/#track-data">トラックデータ</a> 面ループ (フルパワー) 矩形波2</td></tr>
+<tr><td><code>$C2A0</code></td><td>data</td><td>BGM <a href="https://taotao54321.github.io/StarSoldierResource/music/#track-data">トラックデータ</a> 面ループ (フルパワー) 三角波</td></tr>
+<tr><td><code>$C344</code></td><td>data</td><td>メタスプライトデータ ((tile,attr) が 左上、左下、右上、右下 の順に並んでいる)</td></tr>
+<tr><td><code>$C7C4</code></td><td>data</td><td>敵IDごとの<a href="https://taotao54321.github.io/StarSoldierResource/enemy-group/#param">各種フラグ</a> (bit0:弾抑制, bit1:弾高速化, bit2:誘導弾化, bit3:再行動, bit4:高速化)</td></tr>
+<tr><td><code>$C7E4</code></td><td>data</td><td>敵IDごとの<a href="https://taotao54321.github.io/StarSoldierResource/enemy-group/#param">難易度</a></td></tr>
+<tr><td><code>$C804</code></td><td>data</td><td>敵IDごとの<a href="https://taotao54321.github.io/StarSoldierResource/enemy-group/#param">編隊パラメータ</a>データへのポインタテーブル</td></tr>
+<tr><td><code>$C842</code></td><td>data</td><td><a href="https://taotao54321.github.io/StarSoldierResource/prg-map/#addr-C804">敵編隊パラメータデータ</a> レウス (ID:0x01)</td></tr>
+<tr><td><code>$C851</code></td><td>data</td><td>バイトコード レウス (ID:0x01)</td></tr>
+<tr><td><code>$C891</code></td><td>data</td><td><a href="https://taotao54321.github.io/StarSoldierResource/prg-map/#addr-C804">敵編隊パラメータデータ</a> テュラ (ID:0x02)</td></tr>
+<tr><td><code>$C8A0</code></td><td>data</td><td>バイトコード テュラ (ID:0x02)</td></tr>
+<tr><td><code>$C8C9</code></td><td>data</td><td><a href="https://taotao54321.github.io/StarSoldierResource/prg-map/#addr-C804">敵編隊パラメータデータ</a> エイク (ID:0x03)</td></tr>
+<tr><td><code>$C8D5</code></td><td>data</td><td>バイトコード エイク (ID:0x03)</td></tr>
+<tr><td><code>$C8FE</code></td><td>data</td><td><a href="https://taotao54321.github.io/StarSoldierResource/prg-map/#addr-C804">敵編隊パラメータデータ</a> ソレル (ID:0x04)</td></tr>
+<tr><td><code>$C90D</code></td><td>data</td><td>バイトコード ソレル (ID:0x04)</td></tr>
+<tr><td><code>$C92A</code></td><td>data</td><td><a href="https://taotao54321.github.io/StarSoldierResource/prg-map/#addr-C804">敵編隊パラメータデータ</a> ディダ (ID:0x05)</td></tr>
+<tr><td><code>$C939</code></td><td>data</td><td>バイトコード ディダ (ID:0x05)</td></tr>
+<tr><td><code>$C986</code></td><td>data</td><td><a href="https://taotao54321.github.io/StarSoldierResource/prg-map/#addr-C804">敵編隊パラメータデータ</a> ペンド (ID:0x06)</td></tr>
+<tr><td><code>$C999</code></td><td>data</td><td>バイトコード ペンド (ID:0x06)</td></tr>
+<tr><td><code>$C9B1</code></td><td>data</td><td><a href="https://taotao54321.github.io/StarSoldierResource/prg-map/#addr-C804">敵編隊パラメータデータ</a> リアード (ID:0x07)</td></tr>
+<tr><td><code>$C9C0</code></td><td>data</td><td>バイトコード リアード (ID:0x07)</td></tr>
+<tr><td><code>$CA4A</code></td><td>data</td><td><a href="https://taotao54321.github.io/StarSoldierResource/prg-map/#addr-C804">敵編隊パラメータデータ</a> バタフ (ID:0x08)</td></tr>
+<tr><td><code>$CA59</code></td><td>data</td><td>バイトコード バタフ (ID:0x08)</td></tr>
+<tr><td><code>$CA75</code></td><td>data</td><td><a href="https://taotao54321.github.io/StarSoldierResource/prg-map/#addr-C804">敵編隊パラメータデータ</a> スラント (ID:0x09)</td></tr>
+<tr><td><code>$CA8C</code></td><td>data</td><td>バイトコード スラント (ID:0x09)</td></tr>
+<tr><td><code>$CACC</code></td><td>data</td><td><a href="https://taotao54321.github.io/StarSoldierResource/prg-map/#addr-C804">敵編隊パラメータデータ</a> カルゴ (ID:0x0A)</td></tr>
+<tr><td><code>$CADB</code></td><td>data</td><td>バイトコード カルゴ (ID:0x0A)</td></tr>
+<tr><td><code>$CB1E</code></td><td>data</td><td><a href="https://taotao54321.github.io/StarSoldierResource/prg-map/#addr-C804">敵編隊パラメータデータ</a> アトリス (ID:0x0B)</td></tr>
+<tr><td><code>$CB2D</code></td><td>data</td><td>バイトコード アトリス (ID:0x0B)</td></tr>
+<tr><td><code>$CB69</code></td><td>data</td><td><a href="https://taotao54321.github.io/StarSoldierResource/prg-map/#addr-C804">敵編隊パラメータデータ</a> メルス (ID:0x0C)</td></tr>
+<tr><td><code>$CB78</code></td><td>data</td><td>バイトコード メルス (ID:0x0C)</td></tr>
+<tr><td><code>$CB9C</code></td><td>data</td><td><a href="https://taotao54321.github.io/StarSoldierResource/prg-map/#addr-C804">敵編隊パラメータデータ</a> プリング (ID:0x0D)</td></tr>
+<tr><td><code>$CBAB</code></td><td>data</td><td>バイトコード プリング (ID:0x0D)</td></tr>
+<tr><td><code>$CBE8</code></td><td>data</td><td><a href="https://taotao54321.github.io/StarSoldierResource/prg-map/#addr-C804">敵編隊パラメータデータ</a> ヤール (ID:0x0E)</td></tr>
+<tr><td><code>$CBF7</code></td><td>data</td><td>バイトコード ヤール (ID:0x0E)</td></tr>
+<tr><td><code>$CC46</code></td><td>data</td><td><a href="https://taotao54321.github.io/StarSoldierResource/prg-map/#addr-C804">敵編隊パラメータデータ</a> ビーグ (ID:0x0F)</td></tr>
+<tr><td><code>$CC55</code></td><td>data</td><td>バイトコード ビーグ (ID:0x0F)</td></tr>
+<tr><td><code>$CC6F</code></td><td>data</td><td><a href="https://taotao54321.github.io/StarSoldierResource/prg-map/#addr-C804">敵編隊パラメータデータ</a> メーバ (ID:0x10)</td></tr>
+<tr><td><code>$CC7E</code></td><td>data</td><td>バイトコード メーバ (ID:0x10)</td></tr>
+<tr><td><code>$CCA9</code></td><td>data</td><td><a href="https://taotao54321.github.io/StarSoldierResource/prg-map/#addr-C804">敵編隊パラメータデータ</a> ルイド (ID:0x11)</td></tr>
+<tr><td><code>$CCB4</code></td><td>data</td><td><a href="https://taotao54321.github.io/StarSoldierResource/prg-map/#addr-C804">敵編隊パラメータデータ</a> ジェラ (ID:0x12)</td></tr>
+<tr><td><code>$CCC3</code></td><td>data</td><td>バイトコード ジェラ (ID:0x12)</td></tr>
+<tr><td><code>$CCE9</code></td><td>data</td><td><a href="https://taotao54321.github.io/StarSoldierResource/prg-map/#addr-C804">敵編隊パラメータデータ</a> ルダン (ID:0x13)</td></tr>
+<tr><td><code>$CCF8</code></td><td>data</td><td>バイトコード ルダン (ID:0x13)</td></tr>
+<tr><td><code>$CD2C</code></td><td>data</td><td><a href="https://taotao54321.github.io/StarSoldierResource/prg-map/#addr-C804">敵編隊パラメータデータ</a> リューク (ID:0x14)</td></tr>
+<tr><td><code>$CD34</code></td><td>data</td><td><a href="https://taotao54321.github.io/StarSoldierResource/prg-map/#addr-C804">敵編隊パラメータデータ</a> ビータ (ID:0x15)</td></tr>
+<tr><td><code>$CD43</code></td><td>data</td><td>バイトコード ビータ (ID:0x15)</td></tr>
+<tr><td><code>$CD67</code></td><td>data</td><td><a href="https://taotao54321.github.io/StarSoldierResource/prg-map/#addr-C804">敵編隊パラメータデータ</a> テミス (ID:0x16)</td></tr>
+<tr><td><code>$CD76</code></td><td>data</td><td>バイトコード テミス (ID:0x16)</td></tr>
+<tr><td><code>$CDB6</code></td><td>data</td><td><a href="https://taotao54321.github.io/StarSoldierResource/prg-map/#addr-C804">敵編隊パラメータデータ</a> パトラ (ID:0x17)</td></tr>
+<tr><td><code>$CDC5</code></td><td>data</td><td>バイトコード パトラ (ID:0x17)</td></tr>
+<tr><td><code>$CDDE</code></td><td>data</td><td><a href="https://taotao54321.github.io/StarSoldierResource/prg-map/#addr-C804">敵編隊パラメータデータ</a> ドラク (ID:0x18)</td></tr>
+<tr><td><code>$CDED</code></td><td>data</td><td>バイトコード ドラク (ID:0x18)</td></tr>
+<tr><td><code>$CE18</code></td><td>data</td><td><a href="https://taotao54321.github.io/StarSoldierResource/prg-map/#addr-C804">敵編隊パラメータデータ</a> プリズン (ID:0x19)</td></tr>
+<tr><td><code>$CE27</code></td><td>data</td><td>バイトコード プリズン (ID:0x19)</td></tr>
+<tr><td><code>$CE3F</code></td><td>data</td><td><a href="https://taotao54321.github.io/StarSoldierResource/prg-map/#addr-C804">敵編隊パラメータデータ</a> カディス (ID:0x1A)</td></tr>
+<tr><td><code>$CE4E</code></td><td>data</td><td>バイトコード カディス (ID:0x1A)</td></tr>
+<tr><td><code>$CE84</code></td><td>data</td><td><a href="https://taotao54321.github.io/StarSoldierResource/prg-map/#addr-C804">敵編隊パラメータデータ</a> ステリア (ID:0x1B)</td></tr>
+<tr><td><code>$CE93</code></td><td>data</td><td>バイトコード ステリア (ID:0x1B)</td></tr>
+<tr><td><code>$CEA7</code></td><td>data</td><td><a href="https://taotao54321.github.io/StarSoldierResource/prg-map/#addr-C804">敵編隊パラメータデータ</a> リーデ (ID:0x1C)</td></tr>
+<tr><td><code>$CEB6</code></td><td>data</td><td>バイトコード リーデ (ID:0x1C)</td></tr>
+<tr><td><code>$CEDE</code></td><td>data</td><td><a href="https://taotao54321.github.io/StarSoldierResource/prg-map/#addr-C804">敵編隊パラメータデータ</a> グハ (ID:0x1D)</td></tr>
+<tr><td><code>$CEE7</code></td><td>data</td><td>バイトコード グハ (ID:0x1D)</td></tr>
+<tr><td><code>$CEFC</code></td><td>data</td><td><a href="https://taotao54321.github.io/StarSoldierResource/prg-map/#addr-C804">敵編隊パラメータデータ</a> ジェリコ (ID:0x1E)</td></tr>
+<tr><td><code>$CF0B</code></td><td>data</td><td>バイトコード ジェリコ (ID:0x1E)</td></tr>
+<tr><td><code>$CF70</code></td><td>data</td><td><a href="https://taotao54321.github.io/StarSoldierResource/prg-map/#addr-C804">敵編隊パラメータデータ</a> ラザロ (ID:0x1F)</td></tr>
+<tr><td><code>$CF7B</code></td><td>data</td><td>バイトコード ラザロ (ID:0x1F)</td></tr>
+<tr><td><code>$D044</code></td><td>data</td><td>CHR バンク切り替え用データ (<a href="https://wiki.nesdev.com/w/index.php/Bus_conflict">bus conflict</a> 回避用)</td></tr>
+<tr><td><code>$D048</code></td><td>data</td><td>ビッグスターブレイン BGデータ (行単位。データ長の後に<a href="https://taotao54321.github.io/StarSoldierResource/ram-map/#addr-0200">PPU データ転送キュー</a>形式データが続く)</td></tr>
+<tr><td><code>$D250</code></td><td>data</td><td>通常のスターブレイン BGデータ (行単位。データ長の後に<a href="https://taotao54321.github.io/StarSoldierResource/ram-map/#addr-0200">PPU データ転送キュー</a>形式データが続く)</td></tr>
+<tr><td><code>$D30D</code></td><td>data</td><td><a href="https://taotao54321.github.io/StarSoldierResource/spawn-table/">敵編隊出現テーブル</a>データ (bit0-5:敵ID, bit6:ボスフラグ, bit7:複合禁止フラグ)</td></tr>
+<tr><td><code>$D40D</code></td><td>data</td><td>乱数表</td></tr>
+<tr><td><code>$D48D</code></td><td>data</td><td>各面の<a href="https://taotao54321.github.io/StarSoldierResource/ground-format/#setting">地形設定</a></td></tr>
+<tr><td><code>$D50D</code></td><td>data</td><td>地形パレットエントリ (4*43 Byte)</td></tr>
+<tr><td><code>$D5B9</code></td><td>data</td><td>各面の地形の<a href="https://taotao54321.github.io/StarSoldierResource/ground-format/#special-cell">特殊セルデータ</a>へのポインタテーブル</td></tr>
+<tr><td><code>$D5D9</code></td><td>data</td><td>各面の地形の<a href="https://taotao54321.github.io/StarSoldierResource/ground-format/#compression">圧縮データ</a>へのポインタテーブル</td></tr>
+<tr><td><code>$D619</code></td><td>data</td><td>地形セルIDに対応するBGパレットインデックス</td></tr>
+<tr><td><code>$D6B0</code></td><td>data</td><td>地形セルIDに対応する CHR タイルたち ((左上, 右上, 左下, 右下) の4枚組)</td></tr>
+<tr><td><code>$D90C</code></td><td>data</td><td>地形の<a href="https://taotao54321.github.io/StarSoldierResource/ground-format/#compression">圧縮データ</a> 3面前半/4面前半/9面前半/10面前半</td></tr>
+<tr><td><code>$DED9</code></td><td>data</td><td>地形の<a href="https://taotao54321.github.io/StarSoldierResource/ground-format/#compression">圧縮データ</a> 7面前半/8面前半/13面前半/14面前半</td></tr>
+<tr><td><code>$E367</code></td><td>data</td><td>地形の<a href="https://taotao54321.github.io/StarSoldierResource/ground-format/#compression">圧縮データ</a> 1面前半/2面前半/5面前半/6面前半/16面前半</td></tr>
+<tr><td><code>$E73D</code></td><td>data</td><td>地形の<a href="https://taotao54321.github.io/StarSoldierResource/ground-format/#compression">圧縮データ</a> 11面前半/12面前半/15面前半</td></tr>
+<tr><td><code>$EAD8</code></td><td>data</td><td>地形の<a href="https://taotao54321.github.io/StarSoldierResource/ground-format/#compression">圧縮データ</a> 3面後半/4面後半/9面後半/10面後半</td></tr>
+<tr><td><code>$EE85</code></td><td>data</td><td>地形の<a href="https://taotao54321.github.io/StarSoldierResource/ground-format/#compression">圧縮データ</a> 7面後半/13面後半/14面後半</td></tr>
+<tr><td><code>$F305</code></td><td>data</td><td>地形の<a href="https://taotao54321.github.io/StarSoldierResource/ground-format/#compression">圧縮データ</a> 1面後半/2面後半/5面後半/6面後半</td></tr>
+<tr><td><code>$F765</code></td><td>data</td><td>地形の<a href="https://taotao54321.github.io/StarSoldierResource/ground-format/#compression">圧縮データ</a> 11面後半/12面後半/15面後半</td></tr>
+<tr><td><code>$FC7A</code></td><td>data</td><td>地形の<a href="https://taotao54321.github.io/StarSoldierResource/ground-format/#compression">圧縮データ</a> 8面後半/16面後半</td></tr>
+<tr><td><code>$FFD6-$FFF9</code></td><td></td><td>(未使用)</td></tr>
+<tr><td><code>$FFFA</code></td><td>data</td><td>割り込みベクタ</td></tr>
+</tbody></table>
+<h2 id="addr-AFFB"><code>$AFFB</code> - ランレングス圧縮BGデータを PPU へ同期的に転送するルーチン</h2>
+<h3 id="yin-shu">引数</h3>
+<table><thead><tr><th>引数</th><th>内容</th></tr></thead><tbody>
+<tr><td>A</td><td>データアドレス下位</td></tr>
+<tr><td>Y</td><td>データアドレス上位</td></tr>
+</tbody></table>
+<h3 id="detaxing-shi">データ形式</h3>
+<table><thead><tr><th>型</th><th>内容</th></tr></thead><tbody>
+<tr><td>u16</td><td>PPU アドレス</td></tr>
+<tr><td>u8[]</td><td>圧縮データ</td></tr>
+</tbody></table>
+<p>圧縮データは以下のいずれかの要素の配列:</p>
+<ul>
+<li><code>0xFF</code>: データ終端</li>
+<li><code>0..=0x7F</code>: 無圧縮データ</li>
+<li><code>0x80..=0xFE</code> <code>&lt;data&gt;</code>: <code>&lt;data&gt;</code> を指定個数繰り返す。個数は <code>(先頭Byte)-0x80</code>。</li>
+</ul>
+<h2 id="addr-C804"><code>$C804</code> - 敵IDごとの<a href="https://taotao54321.github.io/StarSoldierResource/enemy-group/#param">編隊パラメータ</a>データへのポインタテーブル</h2>
+<p>ポインタが指す先のデータ形式:</p>
+<table><thead><tr><th>型</th><th>内容</th></tr></thead><tbody>
+<tr><td>ptr</td><td>バイトコードへのポインタ</td></tr>
+<tr><td>u8</td><td>初期座標x</td></tr>
+<tr><td>u8</td><td>初期座標y</td></tr>
+<tr><td>u8</td><td>基本メタスプライトID</td></tr>
+<tr><td>u8</td><td>出現間隔</td></tr>
+<tr><td>u8</td><td>出現数</td></tr>
+<tr><td>u8[]</td><td>エントリポイント (出現数と同じ個数)</td></tr>
+</tbody></table>
+
+
+
+</body>
+</html>

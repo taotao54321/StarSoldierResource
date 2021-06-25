@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <title>スターソルジャー (FC) 解析資料 - 小ネタ</title>
+
+  <link rel="stylesheet" href="https://taotao54321.github.io/StarSoldierResource/main.css">
+</head>
+<body>
+
+
+<header>
+  <a href="https://taotao54321.github.io/StarSoldierResource/">スターソルジャー (FC) 解析資料</a>
+</header>
+
+<p>
+Published on: 2021-06-15
+
+</p>
+
+<h1>小ネタ</h1>
+
+<h2 id="lazaro-fastest">ラザロ最速撃破</h2>
+<p>ラザロは出現直後に256発撃ち込むと横移動開始前に撃破できる。<br />
+これは座標y を適切に調整しながらレーザーを撃つことで実現可能(<a href="https://taotao54321.github.io/StarSoldierResource/tips/lazaro.zip">movie</a> / <a href="https://www.youtube.com/watch?v=TD7OoPj3n-o">encode</a>)。</p>
+<h2 id="luke-boss">ボス属性のリューク</h2>
+<p>まれに分裂したリュークが無敵化したり、倒したとき画面上の敵が全滅することがある。</p>
+<p>これの原因は、リュークは本来ザコ(<a href="https://taotao54321.github.io/StarSoldierResource/enemy-group/#param-boss">ボス属性</a>を持たない)なのに、分裂した個体がボス属性を持ってしまうことがあるため。<br />
+リュークが分裂して新たな個体が作られるとき、ボス属性の初期化が行われていない。<br />
+そのため、以前ボス属性を持つ敵が入っていたスロットにその個体が格納されると、ボス属性が引き継がれてしまう。</p>
+<p>ボス属性の敵は撃破時に画面上の敵を全滅させる性質があるため、ボス属性のリュークを倒した際も同じことが起こる。</p>
+<p>ボス属性のリュークが無敵化する原因はリュークのHP管理方式にある。<br />
+本来ザコにはHPの概念が存在せず、被弾時は単に撃破されるか、<a href="https://taotao54321.github.io/StarSoldierResource/enemy-ai/">仮想マシン</a>内で<a href="https://taotao54321.github.io/StarSoldierResource/enemy-ai/#execution">被弾時ジャンプ先へジャンプする</a>かのいずれかである。<br />
+しかしリュークはバイトコードでなく専用ルーチンで動いており、仮想マシンのプログラムカウンタと被弾時ジャンプ先に対応するメモリをHP管理に流用している。<br />
+具体的には、<code>(プログラムカウンタ)=(HP)</code>, <code>(被弾時ジャンプ先)=HP-1</code> と初期化する。すると、ザコの被弾処理の性質より、プログラムカウンタと被弾時ジャンプ先が一致しているかどうかで被弾判定ができ、被弾したら被弾時ジャンプ先を 1 減らすことでHP管理ができる。</p>
+<p>ところが、ボス属性のリュークの場合は<a href="https://taotao54321.github.io/StarSoldierResource/enemy-ai/#execution">被弾処理</a>が異なり、被弾時ジャンプ先に対応するアドレスを(本来の)HPとして扱う。<br />
+つまり被弾しても被弾時ジャンプ先が 1 減るだけで、プログラムカウンタは更新されない。よって、リュークの行動ルーチン内では常に被弾していないものと判定される。<br />
+そして、リュークの行動ルーチンは被弾していないとき毎回 <code>(被弾時ジャンプ先)=(プログラムカウンタ)-1</code> の再初期化を行う。これは毎フレームHPが回復していることに相当し、その結果無敵化してしまう。<br />
+ボス属性のリュークのHPが少ない場合は、同一フレームで複数の弾を撃ち込むことでHP回復前に倒せることもある。</p>
+<p>ボス属性のリュークが発生しやすいのは敵編隊出現テーブルの <a href="https://taotao54321.github.io/StarSoldierResource/spawn-table/#data-group-17"><code>0xFC</code></a> だと思われる(2つ前にボス属性を持つジェリコが出る)。</p>
+
+
+
+</body>
+</html>

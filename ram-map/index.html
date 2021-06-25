@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <title>スターソルジャー (FC) 解析資料 - RAM マップ</title>
+
+  <link rel="stylesheet" href="https://taotao54321.github.io/StarSoldierResource/main.css">
+</head>
+<body>
+
+
+<header>
+  <a href="https://taotao54321.github.io/StarSoldierResource/">スターソルジャー (FC) 解析資料</a>
+</header>
+
+<p>
+Published on: 2021-06-11
+
+<br>Updated on: 2021-06-21
+
+</p>
+
+<h1>RAM マップ</h1>
+
+<p>特に断らない限りリトルエンディアン。</p>
+<h2 id="gai-yao">概要</h2>
+<table><thead><tr><th>アドレス</th><th>型</th><th>内容</th></tr></thead><tbody>
+<tr><td><code>$00-$0F</code></td><td></td><td>雑用</td></tr>
+<tr><td><code>$10</code></td><td><code>u8</code></td><td>PPU <code>$2000</code> 退避用</td></tr>
+<tr><td><code>$11</code></td><td><code>u8</code></td><td>PPU <code>$2001</code> 退避用</td></tr>
+<tr><td><code>$12</code></td><td><code>u8</code></td><td>PPU 描画有効フラグ (0:false, 1:true)</td></tr>
+<tr><td><code>$13</code></td><td><code>u8</code></td><td>PPU スクロールx (<code>$2005</code>)</td></tr>
+<tr><td><code>$14</code></td><td><code>u8</code></td><td>PPU スクロールy (<code>$2005</code>)</td></tr>
+<tr><td><a href="https://taotao54321.github.io/StarSoldierResource/ram-map/#addr-15"><code>$15</code></a></td><td><code>u8</code></td><td>ゲームへの入力 (ABSTUDLR)</td></tr>
+<tr><td><code>$16</code></td><td><code>u8</code></td><td>前フレームで Start を入力したか (0:false, 0x10:true)</td></tr>
+<tr><td><code>$17</code></td><td><code>u8</code></td><td>デモ中かどうか (0:false, 1:true)</td></tr>
+<tr><td><code>$18</code></td><td><code>u8</code></td><td>ゲームシーン描画有効フラグ (0:false, 1:true)</td></tr>
+<tr><td><code>$19</code></td><td><code>u8</code></td><td>地形が有効かどうか (0:false, 1:true)</td></tr>
+<tr><td><a href="https://taotao54321.github.io/StarSoldierResource/ram-map/#addr-1A"><code>$1A</code></a></td><td><code>u8</code></td><td>通知</td></tr>
+<tr><td><code>$1B</code></td><td><code>u8</code></td><td>通知タイマー</td></tr>
+<tr><td><code>$1C</code></td><td><code>u8</code></td><td>敵弾スプライト書き込みルーチンで次に対象とする敵弾のインデックス</td></tr>
+<tr><td><code>$1D</code></td><td><code>u8</code></td><td>オブジェクトスプライト書き込みルーチンで次に対象とするオブジェクトのインデックス</td></tr>
+<tr><td><code>$1E</code></td><td></td><td>(未使用)</td></tr>
+<tr><td><code>$1F</code></td><td><code>u8</code></td><td>フレームカウンタ</td></tr>
+<tr><td><code>$20-$21</code></td><td><code>ptr</code></td><td>地形の<a href="https://taotao54321.github.io/StarSoldierResource/ground-format/#compression">圧縮データ</a>へのポインタ</td></tr>
+<tr><td><code>$22</code></td><td><code>u8</code></td><td>宇宙内の行インデックス</td></tr>
+<tr><td><code>$23</code></td><td><code>u8</code></td><td>地形内の行インデックス</td></tr>
+<tr><td><code>$24</code></td><td><code>u8</code></td><td>地形の<a href="https://taotao54321.github.io/StarSoldierResource/ground-format/">ローテート</a>フラグ (0:false, 0x80:true)</td></tr>
+<tr><td><code>$25</code></td><td></td><td>(未使用)</td></tr>
+<tr><td><code>$26</code></td><td></td><td>(未使用。起動時に 0xC8 が代入される)</td></tr>
+<tr><td><code>$27</code></td><td><code>u8</code></td><td>敵編隊出現テーブル内インデックス</td></tr>
+<tr><td><code>$28</code></td><td><code>u8</code></td><td>現在の敵編隊出現テーブルエントリ値 (bit0-5:オブジェクトID, bit6:ボスフラグ, bit7:複合禁止)</td></tr>
+<tr><td><code>$29</code></td><td><code>u8</code></td><td>敵編隊パラメータロード済みフラグ (0:false, 1:true)</td></tr>
+<tr><td><code>$2A-$2B</code></td><td><code>ptr</code></td><td>現在の敵編隊パラメータへのポインタ</td></tr>
+<tr><td><code>$2C-$2D</code></td><td><code>ptr</code></td><td>現在の敵編隊パラメータ バイトコードへのポインタ</td></tr>
+<tr><td><code>$2E</code></td><td><code>u8</code></td><td>現在の敵編隊パラメータ 基本メタスプライトID</td></tr>
+<tr><td><code>$2F</code></td><td><code>u8</code></td><td>現在の敵編隊パラメータ 出現間隔</td></tr>
+<tr><td><code>$30</code></td><td><code>u8</code></td><td>現在の敵編隊パラメータ 初期座標x</td></tr>
+<tr><td><code>$31</code></td><td><code>u8</code></td><td>現在の敵編隊パラメータ 初期座標y</td></tr>
+<tr><td><code>$32</code></td><td><code>u8</code></td><td>現在の敵編隊 残り出現数</td></tr>
+<tr><td><code>$33</code></td><td><code>u8</code></td><td>現在の敵編隊 次の個体出現までの残り時間</td></tr>
+<tr><td><code>$34</code></td><td><code>u8</code></td><td>現在の敵編隊パラメータ内インデックス</td></tr>
+<tr><td><code>$35</code></td><td><code>u8</code></td><td>現在の敵編隊 ボスフラグ (0:false, 0x40:true)</td></tr>
+<tr><td><code>$36</code></td><td><code>u8</code></td><td>現在の面 (<code>1..=16</code>)</td></tr>
+<tr><td><code>$37</code></td><td><code>u8</code></td><td>残機</td></tr>
+<tr><td><code>$38</code></td><td><code>u8</code></td><td>自動連射処理 作業用</td></tr>
+<tr><td><code>$39</code></td><td><code>u8</code></td><td>星スプライトの基本タイルID (<code>0x3D..=0x3F</code>)</td></tr>
+<tr><td><code>$3A</code></td><td><code>u8</code></td><td>自機座標x</td></tr>
+<tr><td><code>$3B</code></td><td><code>u8</code></td><td>自機座標y</td></tr>
+<tr><td><code>$3C</code></td><td><code>u8</code></td><td>自機パワー (0:初期, 1:スピードアップ, 2:3way弾, 3:バリア(3way/5way))</td></tr>
+<tr><td><code>$3D</code></td><td><code>u8</code></td><td>自機バリア耐久力 (<code>0..=5</code>)</td></tr>
+<tr><td><a href="https://taotao54321.github.io/StarSoldierResource/ram-map/#addr-3E"><code>$3E</code></a></td><td><code>u8</code></td><td>自機状態</td></tr>
+<tr><td><code>$3F</code></td><td><code>u8</code></td><td><a href="https://taotao54321.github.io/StarSoldierResource/ram-map/#addr-3E">自機状態</a>タイマー</td></tr>
+<tr><td><code>$40</code></td><td><code>u8</code></td><td>自機無敵タイマー</td></tr>
+<tr><td><code>$41</code></td><td><code>u8</code></td><td>自機が裏潜り中か (0:false, 1:true)</td></tr>
+<tr><td><code>$42</code></td><td><code>u8</code></td><td>自機がレーザーモードか (0:false, 1:true)</td></tr>
+<tr><td><code>$43</code></td><td><code>i8</code></td><td>星の速度y 基本値</td></tr>
+<tr><td><code>$44-$47</code></td><td><code>u8[4]</code></td><td>パレットアニメーションタイマー</td></tr>
+<tr><td><code>$48-$4B</code></td><td><code>u8[4]</code></td><td>パレットアニメーション明滅フラグ (0:明るくする, 1:暗くする)</td></tr>
+<tr><td><code>$4C</code></td><td><code>u8</code></td><td>スターブレインが逃走タイミングに達するまでのカウント (<code>0..=5</code>)</td></tr>
+<tr><td><code>$4D</code></td><td><code>u8</code></td><td><code>$4C</code> が 0 になったか (0:false, 1:true)</td></tr>
+<tr><td><code>$4E-$4F</code></td><td><code>ptr</code></td><td>スターブレインBGデータへのポインタ</td></tr>
+<tr><td><code>$50</code></td><td><code>u8</code></td><td>フェードアウト演出における PPU スクロールy 目標値</td></tr>
+<tr><td><code>$51</code></td><td><code>u8</code></td><td>(スターブレイン下降中) スターブレインのHP回復およびBG書き込み回数管理用 (<code>0..=16</code>)</td></tr>
+<tr><td><code>$51</code></td><td><code>u8</code></td><td>(スターブレイン戦闘中) スターブレイン状態管理用 (16:生存, 16未満:撃破演出中)</td></tr>
+<tr><td><code>$51</code></td><td><code>u8</code></td><td>(スターブレイン撃破/逃走後) スターブレインのBG消去状態管理用 (<code>0..=16</code>)</td></tr>
+<tr><td><code>$52</code></td><td><code>u8</code></td><td>スターブレインの水平移動タイマー (<code>0..=2</code>)</td></tr>
+<tr><td><code>$53</code></td><td><code>u8</code></td><td>スターブレインの垂直移動タイマー (<code>0..=3</code>)</td></tr>
+<tr><td><code>$54</code></td><td><code>u8</code></td><td>スターブレインの水平移動方向 (0:右, 1:左)</td></tr>
+<tr><td><code>$55</code></td><td><code>u8</code></td><td>スターブレインの垂直移動方向 (0:下, 1:上)</td></tr>
+<tr><td><code>$56</code></td><td><code>u8</code></td><td>スターブレインの種別 (0:ビッグ, 1:通常)</td></tr>
+<tr><td><code>$57</code></td><td><code>u8</code></td><td>CHR バンクID bit0 (これと <code>$C9</code> の和が CHR バンクIDとなる)</td></tr>
+<tr><td><code>$58</code></td><td><code>u8</code></td><td>各種演出用タイマー</td></tr>
+<tr><td><code>$59</code></td><td><code>u8</code></td><td>星をBGの前面に表示するか (0:false, 1:true)</td></tr>
+<tr><td><code>$5A</code></td><td><code>u8</code></td><td>フェードアウト演出におけるパレット変更タイマー</td></tr>
+<tr><td><code>$5B</code></td><td><code>u8</code></td><td>自機狙い弾生成パラメータ (bit4-5:スピード, bit7:誘導弾)</td></tr>
+<tr><td><code>$5C-$5D</code></td><td><code>ptr</code></td><td>仮想マシン作業用: バイトコードへのポインタ</td></tr>
+<tr><td><code>$5E</code></td><td></td><td>(未使用)</td></tr>
+<tr><td><code>$5F</code></td><td><code>u8</code></td><td>フェードアウト演出におけるパレット変更間隔</td></tr>
+<tr><td><code>$60</code></td><td><code>u8</code></td><td>ワープ処理における星速度制御用</td></tr>
+<tr><td><code>$61-$62</code></td><td><code>ptr</code></td><td>現在の面前半の地形の<a href="https://taotao54321.github.io/StarSoldierResource/ground-format/#compression">圧縮データ</a>へのポインタ</td></tr>
+<tr><td><code>$63-$64</code></td><td><code>ptr</code></td><td>現在の面後半の地形の<a href="https://taotao54321.github.io/StarSoldierResource/ground-format/#compression">圧縮データ</a>へのポインタ</td></tr>
+<tr><td><code>$65-$66</code></td><td><code>ptr</code></td><td>現在の面の地形の<a href="https://taotao54321.github.io/StarSoldierResource/ground-format/#special-cell">特殊セルデータ</a>へのポインタ</td></tr>
+<tr><td><code>$67</code></td><td><code>u8</code></td><td>野沢ボーナスを既に取得したか (0:false, 1:true)</td></tr>
+<tr><td><code>$68</code></td><td><code>u8</code></td><td>デライラ同時撃破判定用タイマー</td></tr>
+<tr><td><code>$69</code></td><td><code>u8</code></td><td>エクステンドした回数</td></tr>
+<tr><td><code>$6A</code></td><td><code>u8</code></td><td>現在の地形の<a href="https://taotao54321.github.io/StarSoldierResource/ground-format/#setting">パレットアニメーション</a>種別 (0:なし, 1:ローテート, 2:明るくする, 3:暗くする)</td></tr>
+<tr><td><code>$6B-$6D</code></td><td></td><td>(未使用)</td></tr>
+<tr><td><code>$6E</code></td><td><code>u8</code></td><td>エクステンド音を鳴らす残り回数</td></tr>
+<tr><td><code>$6F</code></td><td><code>u8</code></td><td>ワープ地形に触れた直後かどうか (0:false, 1:true)</td></tr>
+<tr><td><code>$70</code></td><td><code>u8</code></td><td>敵弾の最大数 (<code>1..=8</code>)</td></tr>
+<tr><td><code>$71</code></td><td><code>u8</code></td><td>敵弾の発射間隔 (<code>0..=7</code>)</td></tr>
+<tr><td><code>$72</code></td><td><code>u8</code></td><td>敵弾の発射間隔管理用カウンタ</td></tr>
+<tr><td><code>$73</code></td><td><code>u8</code></td><td>フルパワーの裏技を使っているか (0:false, 1:true)</td></tr>
+<tr><td><code>$74</code></td><td><code>u8</code></td><td>タイトル画面で Select を入力した回数</td></tr>
+<tr><td><code>$75</code></td><td><code>u8</code></td><td>フェードアウト演出における PPU スクロールy 変更量</td></tr>
+<tr><td><code>$76</code></td><td><code>u8</code></td><td>黄金の指アイテムを取得したか (0:false, 1:true)</td></tr>
+<tr><td><code>$77</code></td><td><code>u8</code></td><td>現在レーザーを撃っているか (0:false, 1:true)</td></tr>
+<tr><td><code>$78</code></td><td><code>u8</code></td><td>現在撃っているレーザーに含まれる弾数 (<code>0..=15</code>)</td></tr>
+<tr><td><code>$79</code></td><td><code>u8</code></td><td>レーザーの下端の座標y</td></tr>
+<tr><td><code>$7A</code></td><td><code>u8</code></td><td>レーザーアイテムを取得したか (0:false, 1:true)</td></tr>
+<tr><td><code>$7B</code></td><td><code>u8</code></td><td>前フレームでマイク入力を行ったか (0:false, 4:true)</td></tr>
+<tr><td><a href="https://taotao54321.github.io/StarSoldierResource/ram-map/#addr-7C"><code>$7C</code></a></td><td><code>u8</code></td><td>マイク入力認識用タイマー</td></tr>
+<tr><td><code>$7D</code></td><td><code>u8</code></td><td>前フレームで Select を入力したか (0:false, 0x20:true)</td></tr>
+<tr><td><code>$7E</code></td><td><code>u8</code></td><td>地上物の爆発オブジェクト生成先インデックス</td></tr>
+<tr><td><code>$7F</code></td><td><code>u8</code></td><td>スターブレインを既に逃がしたか (0:false, 1:true) (自機が死ぬと 0 になる)</td></tr>
+<tr><td><code>$80</code></td><td><code>u8</code></td><td>タイトル画面からデモに移行するまでのカウント (<code>0..=10</code>) (BGM終了後、64F ごとにデクリメント)</td></tr>
+<tr><td><code>$81</code></td><td><code>u8</code></td><td>デモ入力生成用乱数インデックス</td></tr>
+<tr><td><a href="https://taotao54321.github.io/StarSoldierResource/ram-map/#addr-82"><code>$82</code></a></td><td><code>u8</code></td><td>生のコントローラ入力 (ABSTUDLR)</td></tr>
+<tr><td><code>$83</code></td><td><code>u8</code></td><td>敵編隊出現テーブル内インデックス保存用 (自機死亡時の復元に使われる)</td></tr>
+<tr><td><code>$84</code></td><td><code>u8</code></td><td>現在行動中の敵の<a href="https://taotao54321.github.io/StarSoldierResource/enemy-group/#param-noshot">弾抑制フラグ</a> (0:false, 0x01:true)</td></tr>
+<tr><td><code>$85</code></td><td><code>u8</code></td><td>現在行動中の敵の<a href="https://taotao54321.github.io/StarSoldierResource/enemy-group/#param-accel-shot">弾高速化フラグ</a> (0:false, 0x02:true)</td></tr>
+<tr><td><code>$86</code></td><td><code>u8</code></td><td>現在行動中の敵の<a href="https://taotao54321.github.io/StarSoldierResource/enemy-group/#param-homing-shot">誘導弾化フラグ</a> (0:false, 0x04:true)</td></tr>
+<tr><td><code>$87</code></td><td><code>u8</code></td><td>現在行動中の敵の<a href="https://taotao54321.github.io/StarSoldierResource/enemy-group/#param-extra-act">再行動フラグ</a> (0:false, 0x08:true) (再行動後は 0)</td></tr>
+<tr><td><code>$88</code></td><td><code>u8</code></td><td>現在行動中の敵の<a href="https://taotao54321.github.io/StarSoldierResource/enemy-group/#param-accel">高速化フラグ</a> (0:false, 0x10:true)</td></tr>
+<tr><td><code>$89</code></td><td><code>u8</code></td><td>現在行動中の敵の<a href="https://taotao54321.github.io/StarSoldierResource/enemy-group/#param-rank">ランク</a> (<code>0..=7</code>)</td></tr>
+<tr><td><code>$8A</code></td><td><code>u8</code></td><td>現在行動中の敵の<a href="https://taotao54321.github.io/StarSoldierResource/enemy-group/#param">難易度</a></td></tr>
+<tr><td><code>$8B</code></td><td><code>u8</code></td><td>ゼグ破壊数</td></tr>
+<tr><td><code>$8C</code></td><td><code>u8</code></td><td>効果音管理用 (低優先度) (bit0-6:<a href="https://taotao54321.github.io/StarSoldierResource/sound/#id">効果音ID</a>, bit7:効果音初期化済フラグ)</td></tr>
+<tr><td><code>$8D</code></td><td><code>u8</code></td><td>効果音管理用 (高優先度) (bit0-6:<a href="https://taotao54321.github.io/StarSoldierResource/sound/#id">効果音ID</a>, bit7:効果音初期化済フラグ)</td></tr>
+<tr><td><code>$8E-$91</code></td><td><code>u8[4]</code></td><td>効果音 各チャンネルの残り再生時間 (F) (BGMとの排他制御用)</td></tr>
+<tr><td><code>$92</code></td><td><code>u8</code></td><td>効果音 タイマー1</td></tr>
+<tr><td><code>$93</code></td><td><code>u8</code></td><td>効果音 タイマー2</td></tr>
+<tr><td><code>$94</code></td><td><code>u8</code></td><td>効果音 音符インデックス</td></tr>
+<tr><td><code>$95</code></td><td><code>u8</code></td><td>bit0-6:<a href="https://taotao54321.github.io/StarSoldierResource/music/#id">BGM ID</a>, bit7:BGM初期化済フラグ</td></tr>
+<tr><td><code>$96</code></td><td><code>u8</code></td><td>BGM 中断状態管理用 (bit0:中断フラグ, bit7:消音完了フラグ)</td></tr>
+<tr><td><code>$97-$9C</code></td><td><code>ptr[3]</code></td><td>BGM 各トラックデータへのポインタ (矩形波1, 矩形波2, 三角波)</td></tr>
+<tr><td><code>$9D-$9F</code></td><td><code>u8[3]</code></td><td>BGM 各トラックの音の再生時間 (F)</td></tr>
+<tr><td><code>$A0-$A2</code></td><td><code>u8[3]</code></td><td>BGM 各トラックの音の残り再生時間 (F)</td></tr>
+<tr><td><code>$A3-$A8</code></td><td><code>ptr[3]</code></td><td>BGM 各トラックのループ開始アドレス</td></tr>
+<tr><td><code>$A9-$AB</code></td><td><code>u8[3]</code></td><td>BGM 各トラックのループカウンタ</td></tr>
+<tr><td><code>$AC-$AD</code></td><td><code>u16</code></td><td>BGM 作業用変数 (周波数タイマー値)</td></tr>
+<tr><td><code>$AE</code></td><td><code>u8</code></td><td>BGM 作業用変数 (雑用)</td></tr>
+<tr><td><code>$AF-$B1</code></td><td><code>u8[3]</code></td><td>BGM 各トラックの設定値 (<code>$4000</code>, <code>$4004</code>, <code>$4008</code> に書き込まれる)</td></tr>
+<tr><td><code>$B2-$B4</code></td><td><code>u8[3]</code></td><td>BGM 長さカウンタマスク (8 固定。<code>$4003</code>, <code>$4007</code>, <code>$400B</code> に書き込む際に OR)</td></tr>
+<tr><td><code>$B5</code></td><td><code>u8</code></td><td>BGM 現在処理中のトラック (0:矩形波1, 1:矩形波2, 2:三角波)</td></tr>
+<tr><td><code>$B6</code></td><td><code>u8</code></td><td>BGM 作業用変数 (BGM終了フラグ)</td></tr>
+<tr><td><code>$B7</code></td><td><code>u8</code></td><td>BGM 作業用変数 (読み出したトラックデータ)</td></tr>
+<tr><td><code>$B8-$BF</code></td><td><code>u8[8]</code></td><td>現在の面の<a href="https://taotao54321.github.io/StarSoldierResource/ground-format/#setting">地形設定</a>(前半、後半)</td></tr>
+<tr><td><code>$C0-$C7</code></td><td><code>u8[8]</code></td><td>スコア (1桁1Byte, 上位桁から下位桁へ)</td></tr>
+<tr><td><code>$C8</code></td><td></td><td>(未使用)</td></tr>
+<tr><td><code>$C9</code></td><td><code>u8</code></td><td>周回数 (0:1周目, 2:2周目)</td></tr>
+<tr><td><code>$CA-$D1</code></td><td><code>u8[8]</code></td><td>ハイスコア (1桁1Byte, 上位桁から下位桁へ)</td></tr>
+<tr><td><code>$D2</code></td><td></td><td>(未使用)</td></tr>
+<tr><td><code>$D3-$DA</code></td><td><code>u8[8]</code></td><td>ソフトリセット判定用 magic 文字列 (&quot;NONTAMA.&quot; が書き込まれる)</td></tr>
+<tr><td><code>$DB-$FF</code></td><td></td><td>(未使用)</td></tr>
+<tr><td><code>$0100-$018F</code></td><td><code>u8[144]</code></td><td>スタック領域</td></tr>
+<tr><td><code>$0190-$01DF</code></td><td><code>u8[80]</code></td><td>現在の地形に対応する PPU 属性テーブルバッファ</td></tr>
+<tr><td><code>$01E0-$01FF</code></td><td><code>u8[32]</code></td><td>パレット</td></tr>
+<tr><td><a href="https://taotao54321.github.io/StarSoldierResource/ram-map/#addr-0200"><code>$0200-$027F</code></a></td><td><code>u8[128]</code></td><td>PPU へのデータ転送キュー (低優先度)</td></tr>
+<tr><td><a href="https://taotao54321.github.io/StarSoldierResource/ram-map/#addr-0200"><code>$0280-$02FF</code></a></td><td><code>u8[128]</code></td><td>PPU へのデータ転送キュー (高優先度)</td></tr>
+<tr><td><code>$0300-$03FF</code></td><td><code>Sprite[64]</code></td><td>スプライトバッファ</td></tr>
+<tr><td><code>$0400-$0417</code></td><td><code>u8[24]</code></td><td>オブジェクト ID</td></tr>
+<tr><td><code>$0418-$042F</code></td><td><code>u8[24]</code></td><td>オブジェクト 座標x</td></tr>
+<tr><td><code>$0430-$0447</code></td><td><code>u8[24]</code></td><td>オブジェクト 座標y</td></tr>
+<tr><td><code>$0448-$045F</code></td><td><code>u8[24]</code></td><td>オブジェクト メタスプライトID</td></tr>
+<tr><td><code>$0460-$0477</code></td><td><code>u8[24]</code></td><td>オブジェクト 基本メタスプライトID</td></tr>
+<tr><td><code>$0460-$0477</code></td><td><code>u8[24]</code></td><td>(爆発オブジェクトの場合) 爆発タイマー</td></tr>
+<tr><td><code>$0478-$048F</code></td><td><code>u8[24]</code></td><td>オブジェクト 仮想マシンのプログラムカウンタ</td></tr>
+<tr><td><code>$0490-$04A7</code></td><td><code>u8[24]</code></td><td>(ザコの場合) 被弾時の仮想マシンのジャンプ先</td></tr>
+<tr><td><code>$0490-$04A7</code></td><td><code>u8[24]</code></td><td>(ボスの場合) HP</td></tr>
+<tr><td><code>$04A8-$04BF</code></td><td><code>u8[24]</code></td><td>オブジェクト 仮想マシンのバイトコードへのポインタ下位</td></tr>
+<tr><td><code>$04A8-$04BF</code></td><td><code>u8[24]</code></td><td>(ルイドの場合) 自機追尾タイマー (<code>32</code> から 8F に1回デクリメントされ、<code>1</code> で止まる)</td></tr>
+<tr><td><code>$04A8-$04BF</code></td><td><code>u8[24]</code></td><td>(リュークの場合) 自機追尾タイマー (<code>0</code> から 1F に1回インクリメントされ、<code>0xFF</code> で止まる)</td></tr>
+<tr><td><code>$04A8-$04BF</code></td><td><code>u8[24]</code></td><td>(ソープラーの場合) 速度x変更用タイマー</td></tr>
+<tr><td><code>$04A8-$04BF</code></td><td><code>u8[24]</code></td><td>(パワーアップアイテムの場合) 水平移動の方向 (0:左, 1:右)</td></tr>
+<tr><td><code>$04A8-$04BF</code></td><td><code>u8[24]</code></td><td>(スターブレインのコア/砲台の場合) VRAM空間 (512x480) 内座標x上位</td></tr>
+<tr><td><code>$04A8-$04BF</code></td><td><code>u8[24]</code></td><td>(地上物の爆発オブジェクトの場合) VRAM空間 (512x480) 内座標x</td></tr>
+<tr><td><code>$04C0-$04D7</code></td><td><code>u8[24]</code></td><td>オブジェクト 仮想マシンのバイトコードへのポインタ上位</td></tr>
+<tr><td><code>$04C0-$04D7</code></td><td><code>u8[24]</code></td><td>(ルイドの場合) 移動方向 (<code>0..=0xF</code>)</td></tr>
+<tr><td><code>$04C0-$04D7</code></td><td><code>u8[24]</code></td><td>(スターブレインのコア/砲台の場合) VRAM空間 (512x480) 内座標x下位</td></tr>
+<tr><td><code>$04D8-$04EF</code></td><td><code>u8[24]</code></td><td>オブジェクト ボスかどうか (0:false, 非0:true)</td></tr>
+<tr><td><code>$04F0-$0507</code></td><td><code>u8[24]</code></td><td>オブジェクト パーツ番号</td></tr>
+<tr><td><code>$04F0-$0507</code></td><td><code>u8[24]</code></td><td>(スターブレインの砲台の場合) 向き (<code>0..=0xF</code>)</td></tr>
+<tr><td><code>$0508-$051F</code></td><td><code>u8[24]</code></td><td>オブジェクト x方向の動きを反転するか (0:false, 0xFF:true)</td></tr>
+<tr><td><code>$0520-$0537</code></td><td><code>u8[24]</code></td><td>オブジェクト y方向の動きを反転するか (0:false, 0xFF:true)</td></tr>
+<tr><td><code>$0520-$0537</code></td><td><code>u8[24]</code></td><td>(スターブレインのコア/砲台の場合) VRAM空間 (512x480) 内座標y</td></tr>
+<tr><td><code>$0538-$054F</code></td><td><code>u8[24]</code></td><td>オブジェクト 仮想マシンのループカウンタ</td></tr>
+<tr><td><code>$0538-$054F</code></td><td><code>u8[24]</code></td><td>(スターブレインの砲台の場合) 弾発射タイマー (<code>0..=16</code>)</td></tr>
+<tr><td><code>$0550-$0567</code></td><td><code>u8[24]</code></td><td>オブジェクト 仮想マシンのスリープタイマー</td></tr>
+<tr><td><code>$0568-$057F</code></td><td><code>u8[24]</code></td><td>オブジェクト 仮想マシンの自機追尾タイマー</td></tr>
+<tr><td><code>$0580-$0597</code></td><td><code>u8[24]</code></td><td>オブジェクト 仮想マシンのループ開始アドレス</td></tr>
+<tr><td><code>$0598-$0617</code></td><td><code>u8[64][2]</code></td><td>星の (座標y,座標x)</td></tr>
+<tr><td><code>$0618</code></td><td><code>u8</code></td><td>乱数インデックス</td></tr>
+<tr><td><code>$0619</code></td><td><code>u8</code></td><td>乱数ルーチン内雑用</td></tr>
+<tr><td><code>$061A</code></td><td></td><td>(未使用)</td></tr>
+<tr><td><code>$061B-$0629</code></td><td><code>u8[15]</code></td><td>自弾 状態</td></tr>
+<tr><td><code>$062A-$0638</code></td><td><code>u8[15]</code></td><td>自弾 座標x</td></tr>
+<tr><td><code>$0639-$0647</code></td><td><code>u8[15]</code></td><td>自弾 座標y</td></tr>
+<tr><td><code>$0648-$064F</code></td><td><code>u8[8]</code></td><td>敵弾 状態</td></tr>
+<tr><td><code>$0650-$0657</code></td><td><code>u8[8]</code></td><td>敵弾 座標x</td></tr>
+<tr><td><code>$0658-$065F</code></td><td><code>u8[8]</code></td><td>敵弾 座標y</td></tr>
+<tr><td><code>$0660-$0667</code></td><td><code>u8[8]</code></td><td>敵弾 方向</td></tr>
+<tr><td><code>$0668-$0687</code></td><td><code>u8[32]</code></td><td>オブジェクトIDごとのランク (<code>0..=7</code>)</td></tr>
+<tr><td><code>$0688</code></td><td><code>u8</code></td><td><a href="https://taotao54321.github.io/StarSoldierResource/ram-map/#addr-068A">地形外観変更要求リングバッファ</a> tail</td></tr>
+<tr><td><code>$0689</code></td><td><code>u8</code></td><td><a href="https://taotao54321.github.io/StarSoldierResource/ram-map/#addr-068A">地形外観変更要求リングバッファ</a> head</td></tr>
+<tr><td><a href="https://taotao54321.github.io/StarSoldierResource/ram-map/#addr-068A"><code>$068A-$06C9</code></a></td><td><code>u8[64]</code></td><td>地形外観変更要求リングバッファ</td></tr>
+<tr><td><code>$06CA-$06D9</code></td><td><code>u8[16]</code></td><td>CHR-ROM 内の magic string チェック用</td></tr>
+<tr><td><code>$06CA-$07F5</code></td><td><code>u8[15][20]</code></td><td>地形</td></tr>
+<tr><td><code>$07F6-$07FF</code></td><td></td><td>(未使用)</td></tr>
+</tbody></table>
+<h2 id="addr-15"><code>$15</code> - ゲームへの入力</h2>
+<p>ABSTUDLR 形式。<br />
+デモ中ならばデモ専用の乱数で生成された入力となる。<br />
+デモ中でなければ <code>$82</code> と同じ値になる。</p>
+<h2 id="addr-1A"><code>$1A</code> - 通知</h2>
+<p>画面中央の文字列表示(&quot;BONUS 80000&quot; など)を「通知」と呼ぶ。<br />
+通知には以下の種類がある:</p>
+<table><thead><tr><th>通知ID</th><th>内容</th></tr></thead><tbody>
+<tr><td>0</td><td>(通知なし)</td></tr>
+<tr><td>1</td><td>&quot;STAGE ?? START&quot;</td></tr>
+<tr><td>2</td><td>&quot;PAUSE&quot;</td></tr>
+<tr><td>3</td><td>&quot;GAME OVER&quot;</td></tr>
+<tr><td>4</td><td>&quot;ATTACK BIG STAR BRAIN&quot;</td></tr>
+<tr><td>5</td><td>&quot;ATTACK STAR BRAIN&quot;</td></tr>
+<tr><td>6</td><td>&quot;BONUS ???????&quot;</td></tr>
+<tr><td>7</td><td>&quot;BRAIN ESCAPED&quot;</td></tr>
+<tr><td>8</td><td>&quot;WARP NEXT STAGE&quot;</td></tr>
+<tr><td>9</td><td>&quot;COMPLETE WARP&quot;</td></tr>
+</tbody></table>
+<p>ボーナス通知(ID:6)の場合、ボーナスIDに対応した文字列が表示される:</p>
+<table><thead><tr><th>ボーナスID</th><th>内容</th></tr></thead><tbody>
+<tr><td>0</td><td>&quot;80000&quot;</td></tr>
+<tr><td>1</td><td>&quot;2000000&quot;</td></tr>
+<tr><td>2</td><td>&quot;40000&quot;</td></tr>
+<tr><td>3</td><td>&quot;10000&quot;</td></tr>
+<tr><td>4</td><td>&quot;4000&quot;</td></tr>
+<tr><td>5</td><td>&quot;1000&quot;</td></tr>
+<tr><td>6</td><td>&quot;500&quot;</td></tr>
+<tr><td>7</td><td>&quot;80000&quot;</td></tr>
+</tbody></table>
+<p><code>$1A</code> の内容は以下の通り:</p>
+<ul>
+<li>bit0-3: 通知ID</li>
+<li>bit4-6: ボーナス通知の場合、ボーナスID。それ以外の場合 0</li>
+</ul>
+<p>通知は通知タイマー <code>$1B</code> が非0である間表示される。</p>
+<h2 id="addr-3E"><code>$3E</code> - 自機状態</h2>
+<table><thead><tr><th>ID</th><th>名称</th><th>説明</th></tr></thead><tbody>
+<tr><td>0</td><td>通常状態</td><td>自機が生存しており、プレイヤー操作可能</td></tr>
+<tr><td>1</td><td>小爆発状態1</td><td>自機が死亡して小爆発中 (1段階目)</td></tr>
+<tr><td>2</td><td>小爆発状態2</td><td>自機が死亡して小爆発中 (2段階目)</td></tr>
+<tr><td>3</td><td>小爆発状態3</td><td>自機が死亡して小爆発中 (3段階目)</td></tr>
+<tr><td>4</td><td>小爆発状態4</td><td>自機が死亡して小爆発中 (4段階目)</td></tr>
+<tr><td>5</td><td>ワープ状態1</td><td>スターブレイン撃破直後、またはワープセルに触れた直後。自機が y=240 まで自動で上へ移動する</td></tr>
+<tr><td>6</td><td>ワープ状態2</td><td>ワープ状態1で自機が y=240 まで移動した後、またはスターブレインが逃走してフェードアウトした後</td></tr>
+<tr><td>7</td><td>出撃状態1</td><td>自機が現在の面に出現した直後 (自機座標y を 240 に設定し、直ちに出撃状態2へ遷移する)</td></tr>
+<tr><td>8</td><td>出撃状態2</td><td>自機が現在の面に出現し、自動で上へ移動している状態</td></tr>
+<tr><td>0x80</td><td>不在状態</td><td>自機が死亡して小爆発が終了した直後、または周回クリア時</td></tr>
+</tbody></table>
+<h2 id="addr-7C"><code>$7C</code> - マイク入力認識用タイマー</h2>
+<p>普段は 0。マイク入力の変化を検出すると 60 になり、1F で 1 ずつ減少して 0 に戻る。<br />
+この値が非0の間、マイク入力が認識される。</p>
+<p>on-&gt;off, off-&gt;on いずれの場合もマイク入力として認識されることに注意。<br />
+これは、ファミコンのバージョンによってはマイク入力 bit が反転している問題に対処するため。<br />
+(参考: <a href="http://www.highriskrevolution.com/wp/gamelife/2021/03/02/%E3%80%8C%E5%8A%A9%E3%81%91%E3%81%A6%E3%83%8F%E3%83%89%E3%82%BD%E3%83%B3%EF%BC%81%E3%80%8D%E3%81%A8%E3%83%9E%E3%82%A4%E3%82%AF%E5%85%A5%E5%8A%9B/">「助けてハドソン！」とマイク入力 | Colorful Pieces of Game</a>)</p>
+<h2 id="addr-82"><code>$82</code> - 生のコントローラ入力</h2>
+<p>以下の全入力の論理和(ABSTUDLR 形式):</p>
+<ul>
+<li>1P標準コントローラ</li>
+<li>2P標準コントローラ (Select, Start は無効)</li>
+<li>1P拡張ポート</li>
+<li>2P拡張ポート</li>
+</ul>
+<h2 id="addr-0200"><code>$0200-$027F</code>, <code>$0280-$02FF</code> - PPU へのデータ転送キュー</h2>
+<p>PPU へのデータ転送を非同期に行うための機構。<br />
+メインスレッドで転送すべきデータをキューに書き込み、NMI スレッドがキューからデータを取り出して実際の転送を行う。<br />
+NMI スレッドはキュー <code>$0280-</code> が空でなければそれを処理し、さもなくばキュー <code>$0200-</code> を処理する。</p>
+<p>データ転送キューの要素は以下のような構造になっている:</p>
+<table><thead><tr><th>フィールド</th><th>型</th><th>内容</th></tr></thead><tbody>
+<tr><td>ヘッダ</td><td>u8</td><td>0:キュー終端, 1:横方向へ書き込み, 2:縦方向へ書き込み</td></tr>
+<tr><td>PPUアドレス</td><td>u16be</td><td>転送先 PPU アドレスの始点。</td></tr>
+<tr><td>書き込みサイズ</td><td>u8</td><td></td></tr>
+<tr><td>書き込むデータ</td><td>u8[]</td><td></td></tr>
+</tbody></table>
+<h2 id="addr-068A"><code>$068A-$06C9</code> - 地形外観変更要求リングバッファ</h2>
+<p>バッファの要素は 2Byte 単位で、以下のような構造になっている:</p>
+<table><thead><tr><th>型</th><th>内容</th></tr></thead><tbody>
+<tr><td>u8</td><td>列</td></tr>
+<tr><td>u8</td><td>bit0-3:行, bit4-7:外観変更ルーチンID (テーブル <code>$A29E</code> 参照)</td></tr>
+</tbody></table>
+
+
+
+</body>
+</html>

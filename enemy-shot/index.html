@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <title>スターソルジャー (FC) 解析資料 - 敵弾</title>
+
+  <link rel="stylesheet" href="https://taotao54321.github.io/StarSoldierResource/main.css">
+</head>
+<body>
+
+
+<header>
+  <a href="https://taotao54321.github.io/StarSoldierResource/">スターソルジャー (FC) 解析資料</a>
+</header>
+
+<p>
+Published on: 2021-06-15
+
+</p>
+
+<h1>敵弾</h1>
+
+<p>敵弾には自機狙い弾と方向指定弾がある。両者には以下の共通点がある:</p>
+<ul>
+<li>自機が通常状態でない(例えば、死亡中やワープ中である)場合、敵弾は発射されない。</li>
+<li>敵弾ランクにより敵弾の最大数と発射間隔が決まる。</li>
+</ul>
+<h2 id="rank">敵弾ランク</h2>
+<p>敵弾の最大数および発射間隔は敵弾ランクによって決まる(<a href="https://taotao54321.github.io/StarSoldierResource/enemy-group/#param-rank">敵編隊ランク</a>とは異なる)。</p>
+<p>敵弾ランクは周回数、面、自機パワーに依存し、次式で計算される:</p>
+<p><code>(敵弾ランク) = min(28, 2*(自機パワー) + (面) + ((2周目) ? 12 : 0))</code></p>
+<p>敵弾の最大数は <code>(敵弾ランク)/4 + 1</code> となる(切り捨て除算。値の範囲は <code>1..=8</code>)。</p>
+<p>敵弾の発射間隔は <code>-((敵弾ランク)+2)/4 + 7</code> となる(切り捨て除算。値の範囲は <code>0..=7</code>)。<br />
+敵が弾を撃った後、この値と同じ回数だけ敵弾の発射がキャンセルされる。</p>
+<h2 id="aim">自機狙い弾</h2>
+<p><a href="https://taotao54321.github.io/StarSoldierResource/enemy-group/">敵編隊パラメータ</a>により計算されたスピード、誘導弾フラグがパラメータとして渡される。</p>
+<p>自機狙い弾の方向は<a href="https://taotao54321.github.io/StarSoldierResource/direction/#aim">近似計算</a>され、さらにパラメータで渡されたスピードが OR される。</p>
+<p>自機狙い弾が誘導弾になることがある。条件は以下の通り:</p>
+<ul>
+<li>自機パワーが 0 の場合、誘導弾にならない。</li>
+<li>パラメータで誘導弾フラグが渡された場合、必ず誘導弾になる。</li>
+<li>スターブレインを逃がしてから死なずに再戦し、逃走カウントが 0 になるまで待つとスターブレインのコアの自機狙い弾が必ず誘導弾になる。</li>
+<li>2周目のとき、1/2 の確率で誘導弾になる。</li>
+<li>1周目の13面以降で、かつ自機にバリアが付いているとき、9/16 の確率で誘導弾になる。</li>
+</ul>
+<h2 id="direction">方向指定弾</h2>
+<p>方向指定弾を撃つのはビッグスターブレインの砲台のみ。<br />
+<a href="https://taotao54321.github.io/StarSoldierResource/enemy-ai/">敵AIバイトコード</a>にも方向指定弾命令はあるが、ゲーム内では使われていない。</p>
+<p>方向指定弾は<a href="https://taotao54321.github.io/StarSoldierResource/enemy-group/">敵編隊パラメータ</a>の影響を受けない。<br />
+また、プログラム中には自機パワーによって方向指定弾を高速化する意図と思われるコードがあるが、実際には機能していない(<code>((自機パワー)&lt;&lt;2) &amp; 0x30</code> を方向に OR しているが、これではシフト量が足りない)。</p>
+<p>方向指定弾が誘導弾になることがある。条件は以下の通り:</p>
+<ul>
+<li>自機パワーが 0 の場合、誘導弾にならない。</li>
+<li>以下のいずれかの条件を満たすと 1/4 の確率で誘導弾になる:
+<ul>
+<li>ビッグスターブレインを逃がしてから死なずに再戦し、逃走カウントが 0 になるまで待つ</li>
+<li>2周目である</li>
+<li>1周目の13面以降で、かつ自機にバリアが付いている</li>
+</ul>
+</li>
+</ul>
+
+
+
+</body>
+</html>

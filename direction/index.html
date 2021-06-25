@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <title>スターソルジャー (FC) 解析資料 - 方向計算</title>
+
+  <link rel="stylesheet" href="https://taotao54321.github.io/StarSoldierResource/main.css">
+</head>
+<body>
+
+
+<header>
+  <a href="https://taotao54321.github.io/StarSoldierResource/">スターソルジャー (FC) 解析資料</a>
+</header>
+
+<p>
+Published on: 2021-06-11
+
+<br>Updated on: 2021-06-16
+
+</p>
+
+<h1>方向計算</h1>
+
+<p>敵および敵弾の移動方向は、向き 16 通り、スピード 4 通りの計 64 通り。<br />
+方向は 6bit 値で表され、下位 4bit が向き、上位 2bit がスピードとなる。</p>
+<p>敵と敵弾では各方向に対応する変位が異なる。敵は左下図のように粗い動きに、敵弾は右下図のように細かい動きになっている:<br />
+(敵弾の方は一部重複がある(<code>0x21</code> と <code>0x31</code> など))</p>
+<p><img src="https://taotao54321.github.io/StarSoldierResource/direction/object-direction.png" alt="object-direction" /> <img src="https://taotao54321.github.io/StarSoldierResource/direction/bullet-direction.png" alt="bullet-direction" /></p>
+<p>敵弾に関しては、通常のプレイではスピード 0 しか目にすることはない。<a href="https://taotao54321.github.io/StarSoldierResource/enemy-group/#param-accel-shot">弾高速化フラグ</a>を持つ敵は<a href="https://taotao54321.github.io/StarSoldierResource/enemy-group/#table">テュラのみ</a>だが、テュラは普通にプレイすると<a href="https://taotao54321.github.io/StarSoldierResource/spawn-table/#data-group-7">かなり早めに出現</a>し、<a href="https://taotao54321.github.io/StarSoldierResource/enemy-group/#param-rank">ランク上昇条件</a>を満たさないため。<br />
+敵弾スピードの理論上の最大値は 2 と思われる。ルイドを利用して遅回しを行い、最初のテュラx2を9面以降で出現させてからわざと死んでテーブルを戻すことでこれを実現できる(<a href="https://taotao54321.github.io/StarSoldierResource/direction/turoa.zip">movie</a>)。</p>
+<h2 id="aim">2点間の向きの計算</h2>
+<p>自機狙い弾などは2点間の向きを近似計算することで実現されている。<br />
+この近似計算は以下の不等式を利用している:</p>
+<ul>
+<li><code>3||dy|-|dx|| &gt;= min(|dx|,|dy|)</code></li>
+<li><code>1.25||dy|-|dx|| &gt;= min(|dx|,|dy|)</code></li>
+</ul>
+<p><a href="https://www.desmos.com/calculator/2yieafies3">グラフ</a>にすると左下図のようになり、画面が 16 個の領域に分割されていることがわかる。<br />
+ゲーム上では 8bit 演算のみで処理するために値を丸めているので、右下図のようになる。</p>
+<p><img src="https://taotao54321.github.io/StarSoldierResource/direction/aim-graph.png" alt="aim-graph" /> <img src="https://taotao54321.github.io/StarSoldierResource/direction/aim.png" alt="aim" /></p>
+<h2 id="turn">自機に近づく方向転換</h2>
+<p>ある方向(ここでは <code>mod 16</code> で考える。以下同様)に移動しているオブジェクトがあるとする。<br />
+このオブジェクトが自機に近づくように移動方向を +1 または -1 することを考える。</p>
+<p>これは、<code>((移動方向)-(自機への方向)) mod 16</code> が 8 より大きければ +1, 8 より小さければ -1 とすればよい(ちょうど 8 の場合は適当に決める)。</p>
+<p>ルイドの移動はこのようなコードで実装されている。</p>
+
+
+
+</body>
+</html>

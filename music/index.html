@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <title>スターソルジャー (FC) 解析資料 - BGM</title>
+
+  <link rel="stylesheet" href="https://taotao54321.github.io/StarSoldierResource/main.css">
+</head>
+<body>
+
+
+<header>
+  <a href="https://taotao54321.github.io/StarSoldierResource/">スターソルジャー (FC) 解析資料</a>
+</header>
+
+<p>
+Published on: 2021-06-14
+
+</p>
+
+<h1>BGM</h1>
+
+<h2 id="id">BGM ID</h2>
+<table><thead><tr><th>ID</th><th>BGM</th></tr></thead><tbody>
+<tr><td>0</td><td>(BGM なし)</td></tr>
+<tr><td>1</td><td>タイトル画面</td></tr>
+<tr><td>2</td><td>ラザロ戦</td></tr>
+<tr><td>3</td><td>スターブレイン撃破</td></tr>
+<tr><td>4</td><td>ゲーム終了</td></tr>
+<tr><td>5</td><td>面イントロ (フルパワー未満)</td></tr>
+<tr><td>6</td><td>面ループ (フルパワー未満)</td></tr>
+<tr><td>7</td><td>スターブレイン戦</td></tr>
+<tr><td>8</td><td>面ループ (フルパワー)</td></tr>
+<tr><td>9</td><td>面イントロ (フルパワー)</td></tr>
+<tr><td>10</td><td>無音</td></tr>
+</tbody></table>
+<h2 id="bgm-deta">BGM データ</h2>
+<p>各BGM は矩形波1, 矩形波2, 三角波の 3 つのトラックから成る。<br />
+また、BGM ごとに矩形波の音色(<code>$4000</code>, <code>$4004</code> へ書き込む値)が設定されている。</p>
+<h3 id="ju-xing-bo-noyin-se">矩形波の音色</h3>
+<p><code>$B716</code> に無音を除く各BGMの矩形波の音色がある。<br />
+全てエンベロープを使用している。</p>
+<h3 id="track-data">トラックデータ</h3>
+<p><code>$BBA6</code> に各BGMに対応するトラックデータへのポインタ(矩形波1, 矩形波2, 三角波)がある。</p>
+<p>トラックデータは以下のコマンドの羅列:</p>
+<table><thead><tr><th><code>cmd</code></th><th>内容</th></tr></thead><tbody>
+<tr><td><code>0</code></td><td>現在の音長だけ消音</td></tr>
+<tr><td><code>25..=0x7F</code></td><td><code>cmd-1</code> を 12 で割った商をオクターブ、余りをノートとして現在の音長だけ発音</td></tr>
+<tr><td><code>0x80..=0xEF</code></td><td>音長を <code>cmd&amp;0x7F</code> に設定(フレーム単位)</td></tr>
+<tr><td><code>0xFC</code></td><td>ループ末尾</td></tr>
+<tr><td><code>0xFD</code> <code>&lt;n&gt;</code></td><td>n 回のループを開始 (1重ループのみサポート)</td></tr>
+<tr><td><code>0xFE</code></td><td>BGM先頭に戻る</td></tr>
+<tr><td><code>0xFF</code></td><td>BGM終了</td></tr>
+</tbody></table>
+<p>無限ループするBGMは矩形波1トラックのみ <code>0xFE</code> で終端されており、他のトラックは終端コマンドがない。</p>
+<p>三角波の場合、発音コマンドは1オクターブ低い音になる。また、現在の音長の 3/4 だけ発音し、残り 1/4 は消音する。</p>
+
+
+
+</body>
+</html>

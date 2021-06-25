@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <title>スターソルジャー (FC) 解析資料 - 敵AI</title>
+
+  <link rel="stylesheet" href="https://taotao54321.github.io/StarSoldierResource/main.css">
+</head>
+<body>
+
+
+<header>
+  <a href="https://taotao54321.github.io/StarSoldierResource/">スターソルジャー (FC) 解析資料</a>
+</header>
+
+<p>
+Published on: 2021-06-10
+
+<br>Updated on: 2021-06-19
+
+</p>
+
+<h1>敵AI</h1>
+
+<p>ほとんどの敵のAIはいわゆる<a href="https://ja.wikipedia.org/wiki/%E3%83%90%E3%82%A4%E3%83%88%E3%82%B3%E3%83%BC%E3%83%89">バイトコード</a>で実装されている。<br />
+つまり、直接 6502 で書くのではなく、「ある方向へ移動する」「弾を撃つ」などの命令を備えたバイトコードで記述し、それを 6502 で書かれた仮想マシン上で動かしている。<br />
+この方式の最大の利点は「処理の中断」が可能なことだろう。例えば「30フレーム横へ動き、60フレーム下へ動き、...」などといった処理を 6502 で直接書くと、多くの場合複雑なステートマシンを実装することになり面倒である。</p>
+<p>バイトコードでなく専用ルーチンで動いている敵はルイド(ID: 0x11), リューク(ID: 0x14), ソープラー(ID: 0x21), スターブレイン(ID: 0x22, 0x23)のみ。<br />
+ここではバイトコードに関する解説のみ行う。</p>
+<p>以下、バイトコードで実装された敵のうちジェリコ、ラザロを「ボス」、それ以外を「ザコ」と総称する。</p>
+<h2 id="turu">ツール</h2>
+<p>バイトコードの<a href="https://github.com/taotao54321/starsoldier-bytecode">アセンブラ/逆アセンブラ</a>を作成した。以下、命令のニーモニックはこのアセンブラを基準とする。</p>
+<p><a href="https://taotao54321.github.io/starsoldier-bytecode-playground/">playground</a> で実際のバイトコードの動作が見られる。</p>
+<h2 id="jia-xiang-masin">仮想マシン</h2>
+<p>敵1体ごと(ボスの場合、1パーツごと)に仮想マシンが割り当てられる。<br />
+なお、1つの敵編隊内ではバイトコードが共有されるが、エントリポイントは敵1体ごとに異なる。</p>
+<p>ここでは仮想マシンの実装をやや抽象化して記述する。また、レジスタ名などは筆者が独自に命名したものである。</p>
+<h3 id="adoresukong-jian">アドレス空間</h3>
+<p>仮想マシンのアドレス空間は 8bit で、ROM 上のバイトコードがマップされる。このアドレス空間は読み取り専用である。</p>
+<h3 id="rezisuta">レジスタ</h3>
+<p>仮想マシンは以下のレジスタを持つ:</p>
+<table><thead><tr><th>名前</th><th>型</th><th>用途</th></tr></thead><tbody>
+<tr><td><code>pc</code></td><td><code>u8</code></td><td>プログラムカウンタ</td></tr>
+<tr><td><code>loop_counter</code></td><td><code>u8</code></td><td>ループカウンタ</td></tr>
+<tr><td><code>loop_start_addr</code></td><td><code>u8</code></td><td>ループ開始アドレス</td></tr>
+<tr><td><code>jump_on_damage</code></td><td><code>u8</code></td><td>ザコの場合:被弾時のジャンプ先<br>ボスの場合:HP</td></tr>
+<tr><td><code>sleep_timer</code></td><td><code>u8</code></td><td>仮想マシンのスリープタイマー</td></tr>
+<tr><td><code>homing_timer</code></td><td><code>u8</code></td><td>自機追尾タイマー</td></tr>
+<tr><td><code>inv_x</code></td><td><code>bool</code></td><td>x 方向の移動を反転</td></tr>
+<tr><td><code>inv_y</code></td><td><code>bool</code></td><td>y 方向の移動を反転</td></tr>
+</tbody></table>
+<p>ループ関連レジスタが1組しかないことからわかるように、1重ループのみサポートしている。</p>
+<h3 id="execution">仮想マシンの動作</h3>
+<p>毎フレーム以下の動作を行う:</p>
+<ul>
+<li><code>sleep_timer</code> レジスタが非0ならばデクリメントして戻る。</li>
+<li><code>homing_timer</code> レジスタが非0ならば自機を<a href="https://taotao54321.github.io/StarSoldierResource/direction/#aim">追尾する方向</a>へ移動して戻る。ただし敵が<a href="https://taotao54321.github.io/StarSoldierResource/enemy-group/#param-extra-act">再行動フラグ</a>を持つとき、特定条件下でさらにバイトコードを実行する。</li>
+<li>以上いずれにも該当しなければ、<code>pc</code> の指すアドレスから 1 ステップ(実行を中断する命令まで)実行する。</li>
+<li>上記とは別に、衝突処理において自機の弾と衝突したとき、
+<ul>
+<li>ザコの場合、<code>jump_on_damage</code> レジスタが非0ならば <code>pc</code> をそのアドレスに変更し、さもなくば破壊される。</li>
+<li>ボスの場合、<code>jump_on_damage</code> レジスタをHPとして扱い、この値が非0ならばデクリメントし、さもなくば破壊される。<br />
+HPが 0 のときに被弾すると破壊されるので、<code>(HP)+1</code> 発の撃ち込みが必要であることに注意。</li>
+</ul>
+</li>
+</ul>
+<h3 id="ming-ling-setuto">命令セット</h3>
+<p>仮想マシンは以下の命令を持つ:</p>
+<table><thead><tr><th>オペコード</th><th>ニーモニック</th><th>機能</th><th>実行の中断</th></tr></thead><tbody>
+<tr><td><code>0x00..=0x3F</code></td><td><a href="https://taotao54321.github.io/StarSoldierResource/enemy-ai/#op-move"><code>move</code></a></td><td>敵を指定方向へ移動</td><td>Yes</td></tr>
+<tr><td><code>0x40</code></td><td><a href="https://taotao54321.github.io/StarSoldierResource/enemy-ai/#op-jump"><code>jump</code></a></td><td>ジャンプ</td><td>No</td></tr>
+<tr><td><code>0x41..=0x4F</code></td><td><a href="https://taotao54321.github.io/StarSoldierResource/enemy-ai/#op-set-sleep-timer"><code>set_sleep_timer</code></a></td><td><code>sleep_timer</code> を設定</td><td>Yes</td></tr>
+<tr><td><code>0x50</code>, <code>0x52..=0x5F</code></td><td><a href="https://taotao54321.github.io/StarSoldierResource/enemy-ai/#op-loop-begin"><code>loop_begin</code></a></td><td>指定回数のループを開始</td><td>No</td></tr>
+<tr><td><code>0x51</code></td><td><a href="https://taotao54321.github.io/StarSoldierResource/enemy-ai/#op-loop-end"><code>loop_end</code></a></td><td>ループ末尾</td><td>No</td></tr>
+<tr><td><code>0x60..=0x6F</code></td><td><a href="https://taotao54321.github.io/StarSoldierResource/enemy-ai/#op-shoot-direction"><code>shoot_direction</code></a></td><td>方向指定弾を撃つ (未使用)</td><td>No</td></tr>
+<tr><td><code>0x70..=0x7F</code></td><td><a href="https://taotao54321.github.io/StarSoldierResource/enemy-ai/#op-set-sprite"><code>set_sprite</code></a></td><td>敵メタスプライトIDを設定</td><td>No</td></tr>
+<tr><td><code>0x80..=0x8F</code></td><td><a href="https://taotao54321.github.io/StarSoldierResource/enemy-ai/#op-set-homing-timer"><code>set_homing_timer</code></a></td><td><code>homing_timer</code> を設定</td><td>No</td></tr>
+<tr><td><code>0x90..=0x93</code></td><td><a href="https://taotao54321.github.io/StarSoldierResource/enemy-ai/#op-set-inversion"><code>set_inversion</code></a></td><td><code>inv_x</code>, <code>inv_y</code> を設定</td><td>No</td></tr>
+<tr><td><code>0xA0</code></td><td><a href="https://taotao54321.github.io/StarSoldierResource/enemy-ai/#op-set-position"><code>set_position</code></a></td><td>敵座標を設定</td><td>No</td></tr>
+<tr><td><code>0xA1</code></td><td><a href="https://taotao54321.github.io/StarSoldierResource/enemy-ai/#op-set-jump-on-damage"><code>set_jump_on_damage</code></a></td><td><code>jump_on_damage</code> を設定</td><td>Yes</td></tr>
+<tr><td><code>0xA2</code></td><td><a href="https://taotao54321.github.io/StarSoldierResource/enemy-ai/#op-increment-sprite"><code>increment_sprite</code></a></td><td>敵メタスプライトIDをインクリメント</td><td>No</td></tr>
+<tr><td><code>0xA3</code></td><td><a href="https://taotao54321.github.io/StarSoldierResource/enemy-ai/#op-decrement-sprite"><code>decrement_sprite</code></a></td><td>敵メタスプライトIDをデクリメント</td><td>No</td></tr>
+<tr><td><code>0xA4</code></td><td><a href="https://taotao54321.github.io/StarSoldierResource/enemy-ai/#op-set-part"><code>set_part</code></a></td><td>敵パーツ番号を設定</td><td>No</td></tr>
+<tr><td><code>0xA5</code></td><td><a href="https://taotao54321.github.io/StarSoldierResource/enemy-ai/#op-randomize-x"><code>randomize_x</code></a></td><td>敵座標x をランダムに変更</td><td>No</td></tr>
+<tr><td><code>0xA6</code></td><td><a href="https://taotao54321.github.io/StarSoldierResource/enemy-ai/#op-randomize-y"><code>randomize_y</code></a></td><td>敵座標y をランダムに変更</td><td>No</td></tr>
+<tr><td><code>0xB0</code></td><td><a href="https://taotao54321.github.io/StarSoldierResource/enemy-ai/#op-branch"><code>bcc_x</code></a></td><td><code>(敵座標x) &lt;  (自機座標x)</code> ならば分岐</td><td>No</td></tr>
+<tr><td><code>0xB1</code></td><td><a href="https://taotao54321.github.io/StarSoldierResource/enemy-ai/#op-branch"><code>bcs_x</code></a></td><td><code>(敵座標x) &gt;= (自機座標x)</code> ならば分岐</td><td>No</td></tr>
+<tr><td><code>0xB2</code></td><td><a href="https://taotao54321.github.io/StarSoldierResource/enemy-ai/#op-branch"><code>bcc_y</code></a></td><td><code>(敵座標y) &lt;  (自機座標y)</code> ならば分岐</td><td>No</td></tr>
+<tr><td><code>0xB3</code></td><td><a href="https://taotao54321.github.io/StarSoldierResource/enemy-ai/#op-branch"><code>bcs_y</code></a></td><td><code>(敵座標y) &gt;= (自機座標y)</code> ならば分岐</td><td>No</td></tr>
+<tr><td><code>0xC0..=0xCF</code></td><td><a href="https://taotao54321.github.io/StarSoldierResource/enemy-ai/#op-shoot-aim"><code>shoot_aim</code></a></td><td>自機狙い弾を撃つ</td><td>No</td></tr>
+<tr><td><code>0xF0</code></td><td><a href="https://taotao54321.github.io/StarSoldierResource/enemy-ai/#op-restore-music"><code>restore_music</code></a></td><td>BGMをデフォルトに戻す</td><td>No</td></tr>
+<tr><td><code>0xF1..=0xFF</code></td><td><a href="https://taotao54321.github.io/StarSoldierResource/enemy-ai/#op-play-sound"><code>play_sound</code></a></td><td>指定した効果音を鳴らす</td><td>No</td></tr>
+</tbody></table>
+<h4 id="op-move"><code>0x00..=0x3F</code> (<code>move</code>)</h4>
+<p>1Byte 命令。</p>
+<p>敵をオペコードの表す<a href="https://taotao54321.github.io/StarSoldierResource/direction/">方向</a>へ移動させる。<br />
+<code>inv_x</code>, <code>inv_y</code> の設定に従って方向が反転する。</p>
+<p>敵が<a href="https://taotao54321.github.io/StarSoldierResource/enemy-group/#param-accel">高速化フラグ</a>を持つとき、特定条件下でスピードが増す。</p>
+<p>実行を<strong>中断</strong>する。<br />
+ただし、敵が<a href="https://taotao54321.github.io/StarSoldierResource/enemy-group/#param-extra-act">再行動フラグ</a>を持つとき、特定条件下でさらに 1 ステップ実行する。</p>
+<h4 id="op-jump"><code>0x40</code> (<code>jump</code>)</h4>
+<p>2Byte 命令。<code>0x40 &lt;addr&gt;</code> の形式。</p>
+<p>プログラムカウンタを <code>&lt;addr&gt;</code> に設定する。</p>
+<p>実行を継続する。</p>
+<h4 id="op-set-sleep-timer"><code>0x41..=0x4F</code> (<code>set_sleep_timer</code>)</h4>
+<p>1Byte 命令。</p>
+<p><code>sleep_timer</code> の値を <code>4*(オペコード下位4bit)</code> にする。</p>
+<p>実行を<strong>中断</strong>する。</p>
+<h4 id="op-loop-begin"><code>0x50</code>, <code>0x52..=0x5F</code> (<code>loop_begin</code>)</h4>
+<p>1Byte 命令。</p>
+<p><code>loop_counter</code> の値をオペコード下位4bitに、<code>loop_start_addr</code> の値を次命令のアドレスにする。<br />
+オペコード <code>0x50</code> は 256 回のループとなることに注意。</p>
+<p>実行を継続する。</p>
+<h4 id="op-loop-end"><code>0x51</code> (<code>loop_end</code>)</h4>
+<p>1Byte 命令。</p>
+<p><code>loop_counter</code> をデクリメントし、その結果が 0 なら次命令のアドレスへ、さもなくば <code>loop_start_addr</code> へジャンプする。</p>
+<p>実行を継続する。</p>
+<h4 id="op-shoot-direction"><code>0x60..=0x6F</code> (<code>shoot_direction</code>)</h4>
+<p>1Byte 命令。ゲーム内では未使用。</p>
+<p>オペコード下位4bitの<a href="https://taotao54321.github.io/StarSoldierResource/direction/">方向</a>に方向指定弾を撃つことを試みる。<br />
+<a href="https://taotao54321.github.io/StarSoldierResource/enemy-group/">敵編隊パラメータ</a>の影響を受けない。</p>
+<p><a href="https://taotao54321.github.io/StarSoldierResource/enemy-shot/#rank">敵弾ランク</a>などの影響により、発射がキャンセルされることがある。<br />
+また、<a href="https://taotao54321.github.io/StarSoldierResource/enemy-shot/#direction">特定条件</a>で誘導弾になることがある。</p>
+<p>実行を継続する。</p>
+<h4 id="op-set-sprite"><code>0x70..=0x7F</code> (<code>set_sprite</code>)</h4>
+<p>1Byte 命令。</p>
+<p>敵メタスプライトIDを <code>(基本値)+(オペコード下位4bit)</code> にする。</p>
+<p>実行を継続する。</p>
+<h4 id="op-set-homing-timer"><code>0x80..=0x8F</code> (<code>set_homing_timer</code>)</h4>
+<p>1Byte 命令。</p>
+<p>オペコード 0x80 なら <code>homing_timer</code> の値を <code>252</code> にする。<br />
+それ以外の場合、<code>homing_timer</code> の値を <code>4*(オペコード下位4bit)</code> にする。</p>
+<p>自機追尾処理に戻って実行を継続する。</p>
+<h4 id="op-set-inversion"><code>0x90..=0x93</code> (<code>set_inversion</code>)</h4>
+<p>1Byte 命令。</p>
+<p><code>inv_x</code> をオペコードの bit0 に、<code>inv_y</code> をオペコードの bit1 にする。</p>
+<p>実行を継続する。</p>
+<h4 id="op-set-position"><code>0xA0</code> (<code>set_position</code>)</h4>
+<p>3Byte 命令。<code>0xA0 &lt;x&gt; &lt;y&gt;</code> の形式。</p>
+<p>敵座標x を <code>&lt;x&gt;</code> に、敵座標y を <code>&lt;y&gt;</code> にする。</p>
+<p>実行を継続する。</p>
+<h4 id="op-set-jump-on-damage"><code>0xA1</code> (<code>set_jump_on_damage</code>)</h4>
+<p>2Byte 命令。<code>0xA1 &lt;addr&gt;</code> の形式。</p>
+<p><code>jump_on_damage</code> を <code>&lt;addr&gt;</code> にする。</p>
+<p>実行を<strong>中断</strong>する。</p>
+<h4 id="op-increment-sprite"><code>0xA2</code> (<code>increment_sprite</code>)</h4>
+<p>1Byte 命令。</p>
+<p>敵メタスプライトIDをインクリメントする。</p>
+<p>実行を継続する。</p>
+<h4 id="op-decrement-sprite"><code>0xA3</code> (<code>decrement_sprite</code>)</h4>
+<p>1Byte 命令。</p>
+<p>敵メタスプライトIDをデクリメントする。</p>
+<p>実行を継続する。</p>
+<h4 id="op-set-part"><code>0xA4</code> (<code>set_part</code>)</h4>
+<p>2Byte 命令。<code>0xA4 &lt;part&gt;</code> の形式。</p>
+<p>敵パーツ番号を <code>&lt;part&gt;</code> にする。</p>
+<p>実行を継続する。</p>
+<h4 id="op-randomize-x"><code>0xA5</code> (<code>randomize_x</code>)</h4>
+<p>2Byte 命令。<code>0xA5 &lt;mask&gt;</code> の形式。</p>
+<p>敵座標x の <code>&lt;mask&gt;</code> で指定されたbitたちをランダムに変更する。</p>
+<p>実行を継続する。</p>
+<h4 id="op-randomize-y"><code>0xA6</code> (<code>randomize_y</code>)</h4>
+<p>2Byte 命令。<code>0xA6 &lt;mask&gt;</code> の形式。</p>
+<p>敵座標y の <code>&lt;mask&gt;</code> で指定されたbitたちをランダムに変更する。</p>
+<p>実行を継続する。</p>
+<h4 id="op-branch"><code>0xB0..=0xB3</code> (<code>bcc_x</code>, <code>bcs_x</code>, <code>bcc_y</code>, <code>bcs_y</code>)</h4>
+<p>2Byte 命令。<code>0xB0..=0xB3 &lt;addr&gt;</code> の形式。</p>
+<p>敵座標と自機座標を比較し、条件を満たしていれば <code>&lt;addr&gt;</code> へ、さもなくば次命令のアドレスへジャンプする。</p>
+<p>実行を継続する。</p>
+<h4 id="op-shoot-aim"><code>0xC0..=0xCF</code> (<code>shoot_aim</code>)</h4>
+<p>1Byte 命令。<br />
+オペコード下位4bitは意味を持たない(何らかの拡張予定があったのかも)。</p>
+<p>自機狙い弾を撃つことを試みる。<br />
+<a href="https://taotao54321.github.io/StarSoldierResource/enemy-group/#param-noshot">弾抑制フラグ</a>、<a href="https://taotao54321.github.io/StarSoldierResource/enemy-group/#param-accel-shot">弾高速化フラグ</a>、<a href="https://taotao54321.github.io/StarSoldierResource/enemy-group/#param-homing-shot">誘導弾化フラグ</a>の影響を受ける。</p>
+<p><a href="https://taotao54321.github.io/StarSoldierResource/enemy-shot/#rank">敵弾ランク</a>などの影響により、発射がキャンセルされることがある。<br />
+また、誘導弾化フラグを含む<a href="https://taotao54321.github.io/StarSoldierResource/enemy-shot/#aim">各種条件</a>により誘導弾になることがある。</p>
+<h4 id="op-restore-music"><code>0xF0</code> (<code>restore_music</code>)</h4>
+<p>1Byte 命令。</p>
+<p>BGMをデフォルトに戻す。ラザロのBGMを元に戻すのに使われる。<br />
+ただし、現在ゲームオーバーBGMが流れている場合は何もしない。</p>
+<p>実行を継続する。</p>
+<h4 id="op-play-sound"><code>0xF1..=0xFF</code> (<code>play_sound</code>)</h4>
+<p>1Byte 命令。</p>
+<p>オペコード下位4bitの効果音を鳴らす。</p>
+<p>実行を継続する。</p>
+
+
+
+</body>
+</html>

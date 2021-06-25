@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <title>スターソルジャー (FC) 解析資料 - 衝突判定</title>
+
+  <link rel="stylesheet" href="https://taotao54321.github.io/StarSoldierResource/main.css">
+</head>
+<body>
+
+
+<header>
+  <a href="https://taotao54321.github.io/StarSoldierResource/">スターソルジャー (FC) 解析資料</a>
+</header>
+
+<p>
+Published on: 2021-06-18
+
+</p>
+
+<h1>衝突判定</h1>
+
+<p>衝突判定には以下の2種類があり、それぞれ hitbox が異なる:</p>
+<ul>
+<li>自弾vsオブジェクト / 敵弾vs自機 (これを「弾vs物」と総称する)</li>
+<li>自機vsオブジェクト</li>
+</ul>
+<p>なお、弾、自機、オブジェクト座標は全て hitbox の左上隅のピクセルを指す。</p>
+<h2 id="shot-vs-body">弾vs物 の衝突判定</h2>
+<p>弾 hitbox は (6,6), 物 hitbox は (13,13) である。</p>
+<p>この衝突判定コードは <code>$B050</code> にある。<br />
+x方向について場合分けすると以下のようになっている:</p>
+<ul>
+<li><code>(弾x) &lt;= (物x)</code> のとき、<code>(物x) - (弾x) &lt; 6</code> で hit</li>
+<li><code>(弾x) &gt;  (物x)</code> のとき、<code>(物x) - (弾x) &gt;= -12</code> で hit</li>
+</ul>
+<p>y方向についても同様。ここから前述の hitbox が得られる。</p>
+<p>ちなみに、レーザーを構成する弾は縦方向に 8px 間隔で並んでいるため、敵1体に対して 1F 内に撃ち込める弾数は 3 が上限となる。</p>
+<h2 id="hero-vs-object">自機vsオブジェクト の衝突判定</h2>
+<p>自機 hitbox は (14,14), オブジェクト hitbox は (15,15) である。</p>
+<p>この衝突判定コードは <code>$B067</code> にある。<br />
+x方向について場合分けすると以下のようになっている:</p>
+<ul>
+<li><code>(自機x) &lt;= (オブジェクトx)</code> のとき、<code>(オブジェクトx) - (自機x) &lt; 14</code> で hit</li>
+<li><code>(自機x) &gt;  (オブジェクトx)</code> のとき、<code>(オブジェクトx) - (自機x) &gt;= -14</code> で hit</li>
+</ul>
+<p>y方向についても同様。ここから前述の hitbox が得られる。</p>
+
+
+
+</body>
+</html>

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <title>スターソルジャー (FC) 解析資料 - 地形データの形式</title>
+
+  <link rel="stylesheet" href="https://taotao54321.github.io/StarSoldierResource/main.css">
+</head>
+<body>
+
+
+<header>
+  <a href="https://taotao54321.github.io/StarSoldierResource/">スターソルジャー (FC) 解析資料</a>
+</header>
+
+<p>
+Published on: 2021-06-15
+
+<br>Updated on: 2021-06-25
+
+</p>
+
+<h1>地形データの形式</h1>
+
+<p>地形は1行あたり 20 セルで、各面につき 256 行ある。<br />
+RAM 上では現在位置の 15 行のみ保持しており、16F ごとに ROM から行を読み込んで内容を更新する。</p>
+<p>地形データは各面ごとに前半 128 行、後半 128 行のチャンクに分かれており、「ランレングス」「内容が同一の行への参照」を用いて圧縮されている。<br />
+また、128 行のチャンクごとに「地形のローテート設定」があり、これが有効な場合行の左半分と右半分が入れ替わる。これによりデータ量を増やさずに地形のバリエーションを増やしている。</p>
+<p>なお、ワープや裏パワーなどの特殊セルは圧縮データ内には格納されておらず、各面ごとに位置データを持つ形になっている。</p>
+<p>地形データ関連の PRG-ROM アドレスを示す:</p>
+<table><thead><tr><th>アドレス</th><th>内容</th></tr></thead><tbody>
+<tr><td><code>$D48D</code></td><td>各面の<a href="https://taotao54321.github.io/StarSoldierResource/ground-format/#setting">地形設定</a>(前半、後半)</td></tr>
+<tr><td><code>$D50D</code></td><td>地形パレットエントリ (4*43 Byte)</td></tr>
+<tr><td><code>$D5B9</code></td><td>各面の<a href="https://taotao54321.github.io/StarSoldierResource/ground-format/#special-cell">特殊セルデータ</a>へのポインタテーブル</td></tr>
+<tr><td><code>$D5D9</code></td><td>各面の<a href="https://taotao54321.github.io/StarSoldierResource/ground-format/#compression">圧縮データ</a>(前半、後半)へのポインタテーブル</td></tr>
+</tbody></table>
+<h2 id="cell-id">地形セルID</h2>
+<table><thead><tr><th>ID</th><th>内容</th></tr></thead><tbody>
+<tr><td><code>0x00</code></td><td>列依存特殊セル 初期状態 (列 mod 4 の値により内容変化: (0:クジラ, 1:黄金の指, 2:ミロン, 3:レーザー))</td></tr>
+<tr><td><code>0x04</code></td><td>野沢プログラマー 初期状態</td></tr>
+<tr><td><code>0x05</code></td><td>裏パワー 初期状態</td></tr>
+<tr><td><code>0x06</code></td><td>1UP 初期状態</td></tr>
+<tr><td><code>0x07</code></td><td>ワープ 初期状態</td></tr>
+<tr><td><code>0x09..=0x0D</code></td><td>ゼグ 初期状態 (IDにより外観が異なる)</td></tr>
+<tr><td><code>0x0E</code></td><td>2x2地上ザコ (300点) 左上</td></tr>
+<tr><td><code>0x0F</code></td><td>2x2地上ザコ (300点) 右上</td></tr>
+<tr><td><code>0x10</code></td><td>2x2地上ザコ (300点) 左下</td></tr>
+<tr><td><code>0x11</code></td><td>2x2地上ザコ (300点) 右下</td></tr>
+<tr><td><code>0x12</code></td><td>2x2地上ザコ (200点) 左上</td></tr>
+<tr><td><code>0x13</code></td><td>2x2地上ザコ (200点) 右上</td></tr>
+<tr><td><code>0x14</code></td><td>2x2地上ザコ (200点) 左下</td></tr>
+<tr><td><code>0x15</code></td><td>2x2地上ザコ (200点) 右下</td></tr>
+<tr><td><code>0x16</code></td><td>地上ザコ1 (100点)</td></tr>
+<tr><td><code>0x17</code></td><td>地上ザコ2 (100点)</td></tr>
+<tr><td><code>0x18</code></td><td>パワーアップ箱</td></tr>
+<tr><td><code>0x19..=0x1C</code></td><td>トルード 初期状態 (値が小さい方が固い)</td></tr>
+<tr><td><code>0x1D</code></td><td>デライラ 初期状態 左上</td></tr>
+<tr><td><code>0x1E</code></td><td>デライラ 初期状態 右上</td></tr>
+<tr><td><code>0x1F</code></td><td>デライラ 初期状態 左下</td></tr>
+<tr><td><code>0x20</code></td><td>デライラ 初期状態 右下</td></tr>
+<tr><td><code>0x26</code></td><td>空白</td></tr>
+<tr><td><code>0x27</code></td><td>外観変更中</td></tr>
+<tr><td><code>0x96</code></td><td>トラップゾーン</td></tr>
+<tr><td><code>0xA0</code></td><td>1UP 出現後</td></tr>
+<tr><td><code>0xA1</code></td><td>ワープ 出現後</td></tr>
+<tr><td><code>0xA8..=0xAF</code></td><td>1UP 撃ち込み中状態</td></tr>
+<tr><td><code>0xB0..=0xC7</code></td><td>デライラ 撃ち込み中状態</td></tr>
+<tr><td><code>0xC8..=0xCF</code></td><td>ゼグ 撃ち込み中状態</td></tr>
+<tr><td><code>0xD0..=0xD7</code></td><td>トルード 撃ち込み中状態</td></tr>
+<tr><td><code>0xD8..=0xDF</code></td><td>ワープ 撃ち込み中状態</td></tr>
+<tr><td><code>0xE0..=0xEF</code></td><td>野沢プログラマー 撃ち込み中状態</td></tr>
+<tr><td><code>0xF0..=0xFF</code></td><td>列依存特殊セル 撃ち込み中状態</td></tr>
+</tbody></table>
+<h2 id="compression">地形データの圧縮</h2>
+<p>1行ずつ RAM へ展開する都合上、行ごとに圧縮されたデータが並んでいる。</p>
+<p>行データの先頭 Byte が <code>0xDB</code> の場合、内容が同一の行への参照を表す。<br />
+この場合、後続 2Byte をポインタと解釈し、そのアドレスから行データを読み込む。</p>
+<p>行データの先頭 Byte が <code>0xDB</code> 以外なら圧縮データ。この場合、ちょうど 20 セル読み込むまで以下を繰り返す:</p>
+<ul>
+<li>現在位置の Byte を <code>b</code> として読み取る。</li>
+<li><code>b &lt; 0xDC</code> ならば <code>b</code> をそのままセル ID として扱う。</li>
+<li><code>0xDC &lt;= b &lt; 0xE0</code> ならば、後続 4Byte を <code>b-0xDA</code> 回繰り返すランレングスとして展開する(繰り返し回数: <code>2..=5</code>)。</li>
+<li><code>0xE0 &lt;= b &lt; 0xE5</code> ならば、後続 3Byte を <code>b-0xDE</code> 回繰り返すランレングスとして展開する(繰り返し回数: <code>2..=6</code>)。</li>
+<li><code>0xE5 &lt;= b &lt; 0xEE</code> ならば、後続 2Byte を <code>b-0xE3</code> 回繰り返すランレングスとして展開する(繰り返し回数: <code>2..=10</code>)。</li>
+<li><code>0xEE &lt;= b</code> ならば、後続 1Byte を <code>b-0xEB</code> 回繰り返すランレングスとして展開する(繰り返し回数: <code>3..=20</code>)。</li>
+</ul>
+<p>ちなみに、ゲーム内のデータはこの方式の下で最適な圧縮となっている(筆者作の<a href="https://github.com/taotao54321/starsoldier-ground-compress">動的計画法による最適圧縮プログラム</a>と出力サイズが一致する)。<br />
+圧縮率は 9930 / 23040 (約 43 %)。</p>
+<h2 id="setting">地形設定</h2>
+<p>各面の前半、後半について以下の設定を持っている:</p>
+<ul>
+<li>パレット (4色からなる既定のエントリ * 4)</li>
+<li>ローテートフラグ</li>
+<li>パレットアニメーション種別</li>
+</ul>
+<p>ローテートフラグが立っている場合、地形の行の左半分と右半分が入れ替わる。ただし行インデックス 240 以降は入れ替わらない(つまり、デライラ周辺の地形は固定)。</p>
+<p>地形設定データは1つあたり 4Byte:</p>
+<table><thead><tr><th>Byte</th><th>内容</th></tr></thead><tbody>
+<tr><td>0</td><td>bit0-5:パレットエントリ0, bit7:地形ローテートフラグ</td></tr>
+<tr><td>1</td><td>bit0-5:パレットエントリ1</td></tr>
+<tr><td>2</td><td>bit0-5:パレットエントリ2</td></tr>
+<tr><td>3</td><td>bit0-5:パレットエントリ3, bit6-7:パレットアニメーション種別</td></tr>
+</tbody></table>
+<p>パレットアニメーション種別:</p>
+<table><thead><tr><th>値</th><th>意味</th></tr></thead><tbody>
+<tr><td>0</td><td>アニメーションなし</td></tr>
+<tr><td>1</td><td>パレットエントリ3 の色1-3 をローテート</td></tr>
+<tr><td>2</td><td>パレットエントリ3 の色1 を明滅</td></tr>
+</tbody></table>
+<h2 id="special-cell">特殊セルデータ</h2>
+<p>特殊セルデータは以下の要素の配列:</p>
+<table><thead><tr><th>Byte</th><th>内容</th></tr></thead><tbody>
+<tr><td>0</td><td>地形内の行インデックス。0 で終端</td></tr>
+<tr><td>1</td><td>bit0-4:列インデックス, bit5-7:セルID</td></tr>
+</tbody></table>
+
+
+
+</body>
+</html>

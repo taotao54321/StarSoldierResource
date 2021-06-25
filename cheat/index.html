@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <title>スターソルジャー (FC) 解析資料 - 裏技</title>
+
+  <link rel="stylesheet" href="https://taotao54321.github.io/StarSoldierResource/main.css">
+</head>
+<body>
+
+
+<header>
+  <a href="https://taotao54321.github.io/StarSoldierResource/">スターソルジャー (FC) 解析資料</a>
+</header>
+
+<p>
+Published on: 2021-06-15
+
+<br>Updated on: 2021-06-16
+
+</p>
+
+<h1>裏技</h1>
+
+<h2 id="fullpower">フルパワーかつレーザー取得済みで開始</h2>
+<p>タイトル画面で Select をちょうど 10 回入力した後、Select 以外の全キーを同時に入力する。このとき<a href="https://taotao54321.github.io/StarSoldierResource/ram-map/#addr-7C">マイク入力</a>を行っていてはならない。</p>
+<p>成功するとフルパワー裏技フラグ <code>$73</code> に 1 が XOR され、タイトル画面に戻る。<br />
+(つまり、2回実行するとフルパワー裏技フラグが無効に戻る。また、ここから<a href="https://taotao54321.github.io/StarSoldierResource/cheat/#second-round">2周目から開始する裏技</a>と複合させることもできる)</p>
+<p>この状態でゲームを開始すると最初からフルパワーかつレーザー取得済みになっている。死亡時も同様の状態で復活する。</p>
+<p>上下/左右同時押しが可能な環境ならば1Pコントローラのみで実行できる。<br />
+そうでない場合、コントローラ入力は<a href="https://taotao54321.github.io/StarSoldierResource/ram-map/#addr-82">2P入力もORされる</a>ことを利用すればよい。例えば、1Pで左上+A+B+Start, 2Pで右下を押す。</p>
+<h2 id="second-round">2周目から開始</h2>
+<p>タイトル画面で Select をちょうど 4 回入力した後、<a href="https://taotao54321.github.io/StarSoldierResource/ram-map/#addr-7C">マイク入力</a>を行いつつ上下以外の全キーを同時に入力する。</p>
+<p>成功すると周回数 <code>$C9</code> に 2 が XOR され、タイトル画面に戻る。<br />
+(つまり、2回実行すると1周目に戻る。また、ここから<a href="https://taotao54321.github.io/StarSoldierResource/cheat/#fullpower">フルパワー裏技</a>と複合させることもできる)</p>
+<p>この状態でゲームを開始すると最初から2周目になっている。</p>
+<p>左右同時押しが可能な環境ならば1Pコントローラのみで実行できる。<br />
+そうでない場合、コントローラ入力は<a href="https://taotao54321.github.io/StarSoldierResource/ram-map/#addr-82">2P入力もORされる</a>ことを利用すればよい。例えば、(マイク入力を行いつつ)1Pで右+A+B+Select+Start, 2Pで左を押す。</p>
+
+
+
+</body>
+</html>
